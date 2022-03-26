@@ -114,4 +114,4 @@ while True:
         con.print(layout)
         sleep(0.2)
 
-update screen()
+# update screen()

@@ -77,8 +77,8 @@ injuries {
 
 
 
-Definitely
 
-
-Maybe
-    -Score
+#####
+consider changing screen classes, removing activate method and doing everything on init,
+then the object can be instantiated and loop, and once the loop ends the object can be tore down
+#####
