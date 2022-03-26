@@ -9,4 +9,5 @@ class Settings:
     console_height = 40
     empty_str = ""
     clear_cmd = ""
+    get_term_size = None
     # THEME ???

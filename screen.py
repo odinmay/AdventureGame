@@ -9,25 +9,24 @@ from art import text2art
 from settings import Settings
 import keyboard
 from utils import Utils, Const
+from shutil import get_terminal_size
+from time import sleep
 
 # Set up the logger
 logger = logging.getLogger(__name__)
 
-# Handles drawing and Game Loop for the Main Menu
-class MainMenuDisplay:
-    resume = Panel(Align(text2art("1.     Resume", font=Settings.font), align="center", vertical="middle"))
-    options = Panel(Align(text2art("2.     Options", font=Settings.font), align="center", vertical="middle"))
-    stats = Panel(Align(text2art("3.     Stats", font=Settings.font), align="center", vertical="middle"))
-    quit_game = Panel(Align(text2art("4.     Quit", font=Settings.font), align="center", vertical="middle"))
 
-    def __init__(self):
-        self.running = True
+class MenuWindow:
+    def __init__(self, opt1, opt2, opt3, opt4):
+        self.opt1 = Panel(Align(text2art(f"1.  {opt1}", font=Settings.font), align="center", vertical="middle"))
+        self.opt2 = Panel(Align(text2art(f"2.  {opt2}", font=Settings.font), align="center", vertical="middle"))
+        self.opt3 = Panel(Align(text2art(f"3.  {opt3}", font=Settings.font), align="center", vertical="middle"))
+        self.opt4 = Panel(Align(text2art(f"4.  {opt4}", font=Settings.font), align="center", vertical="middle"))
 
         self.con = Console()
         self.con.height = Settings.console_height
-
-        self.twidth = os.get_terminal_size()[0]
-        self.theight = os.get_terminal_size()[1]
+        self.twidth = get_terminal_size()[0]
+        self.theight = get_terminal_size()[1]
 
         self.layout = Layout()
         self.layout.split_row(
@@ -36,46 +35,59 @@ class MainMenuDisplay:
             Layout(Const.sidebar, ratio=1)
         )
         self.layout["Center"].split_column(
-            Layout(MainMenuDisplay.resume),
-            Layout(MainMenuDisplay.options),
-            Layout(MainMenuDisplay.stats),
-            Layout(MainMenuDisplay.quit_game)
+            Layout(self.opt1),
+            Layout(self.opt2),
+            Layout(self.opt3),
+            Layout(self.opt4)
         )
+
         self.con.print(self.layout)
 
-    def options_menu(self):
-        opt_menu = OptionsDisplay()
-        opt_menu.display()
-        del opt_menu
+    def show(self):
+        Utils.transition()
+        self.con.print(self.layout)
 
-    def display(self):
+    def listen(self):
         """
-        When this function is called it will start the 'Game Loop' specific to the main menu
+        Listen for window resize and returns the matched key pressed as a string
         """
-        while self.running:
-            current_x, current_y = os.get_terminal_size()
-
+        while True:
+            # Resize window
+            current_x, current_y = get_terminal_size()
             if (current_x, current_y) != (self.twidth, self.theight):
-                # update_screen(main_menu) Should do the below
                 os.system(Settings.clear_cmd)
                 self.con.print(self.layout)
-                # sleep(0.2)
 
             # Wait for keyboard input
-            key = keyboard.read_key()
+            key = keyboard.read_key(suppress=True)
+
             match key:
                 case "esc":
-                    return
+                    return key
                 case "1":
-                    return
+                    return key
                 case "2":
-                    os.system(Settings.clear_cmd)
-                    self.options_menu()
+                    return key
                 case "3":
-                    pass
+                    return key
                 case "4":
-                    pass
+                    return key
 
+
+# Main Menu Display Class
+class MainMenuDisplay(MenuWindow):
+    def __init__(self):
+        super(MainMenuDisplay, self).__init__("Resume", "Options", "Stats", "Quit Game")
+
+
+class OptionsDisplay(MenuWindow):
+    def __init__(self):
+        super(OptionsDisplay, self).__init__("Height", "Font", "Color", "Credits")
+
+
+class HeightOptions(MenuWindow):
+    def __init__(self):
+        super(HeightOptions, self).__init__("35", "40", "45", "50")
 
 class ActiveGameDisplay:
     hud = f"""
@@ -100,13 +112,12 @@ class ActiveGameDisplay:
        10  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
     """
 
-
     def __init__(self):
         logger.info("Setting up Game Display..")
         # Set variables
         self.running = True
-        self.twidth = os.get_terminal_size()[0]
-        self.theight = os.get_terminal_size()[1]
+        self.twidth = get_terminal_size()[0]
+        self.theight = get_terminal_size()[1]
 
         # Instantiate Layout and Console Object
         self.layout = Layout()
@@ -130,19 +141,18 @@ class ActiveGameDisplay:
         self.con.print(self.layout)
         logger.info("Main Display successfully setup")
 
-    def pause(self):
-        main_menu = MainMenuDisplay()
-        main_menu.display()
-        del main_menu
+    def show(self):
+        Utils.transition()
+        self.con.print(self.layout)
 
     # Activate this Screens Game Loop
-    def display(self):
+    def listen(self):
         """
-        When this function is called it will start the 'Game Loop' specific to the main menu
+        Listen for window resize and returns the matched key pressed as a string
         """
 
-        while self.running:
-            current_x, current_y = os.get_terminal_size()
+        while True:
+            current_x, current_y = get_terminal_size()
 
             if (current_x, current_y) != (self.twidth, self.theight):
                 # update_screen(main_menu) Should do the below
@@ -155,25 +165,26 @@ class ActiveGameDisplay:
 
             match key:
                 case "esc":
-                    Utils.transition() # Simply clears console and briefly sleeps to avoid double pressing buttons
-                    self.pause()
-                    os.system(Settings.clear_cmd)
-                    self.con.print(self.layout)
+                    return key
+                    # Utils.transition()  # Simply clears console and briefly sleeps to avoid double pressing buttons
+                    # self.pause()
+                    # os.system(Settings.clear_cmd)
+                    # self.con.print(self.layout)
                 case "1":
-                    pass
+                    return key
                 case "2":
-                    pass
+                    return key
                 case "3":
-                    pass
+                    return key
                 case "4":
-                    pass
+                    return key
 
 
 class OptionsDisplay:
-    height_opt = Panel(Align(text2art("1.     Console Height", font=Settings.font), align="center", vertical="middle"))
-    font_opt = Panel(Align(text2art("2.     Font", font=Settings.font), align="center", vertical="middle"))
-    ph1 = Panel(Align(text2art("3.     Placeholder", font=Settings.font), align="center", vertical="middle"))
-    back = Panel(Align(text2art("4.     Back", font=Settings.font), align="center", vertical="middle"))
+    height_opt = Panel(Align(text2art("1.  Console Height", font=Settings.font), align="center", vertical="middle"))
+    font_opt = Panel(Align(text2art("2.  Font", font=Settings.font), align="center", vertical="middle"))
+    ph1 = Panel(Align(text2art("3.  Placeholder", font=Settings.font), align="center", vertical="middle"))
+    back = Panel(Align(text2art("4.  Back", font=Settings.font), align="center", vertical="middle"))
 
     def __init__(self):
         self.running = True
@@ -181,8 +192,8 @@ class OptionsDisplay:
         self.con = Console()
         self.con.height = Settings.console_height
 
-        self.twidth = os.get_terminal_size()[0]
-        self.theight = os.get_terminal_size()[1]
+        self.twidth = get_terminal_size()[0]
+        self.theight = get_terminal_size()[1]
 
         self.layout = Layout()
         self.layout.split_row(
@@ -198,17 +209,16 @@ class OptionsDisplay:
         )
         self.con.print(self.layout)
 
-    def console_height_menu(self):
-        height = input("Please enter a new console height:\n")
-        height = int(height)
-        Settings.console_height = height
+    def show(self):
+        Utils.transition()
+        self.con.print(self.layout)
 
-    def display(self):
+    def listen(self):
         """
-        When this function is called it will start the 'Game Loop' specific to the main menu
+        Listen for window resize and returns the matched key pressed as a string
         """
         while self.running:
-            current_x, current_y = os.get_terminal_size()
+            current_x, current_y = get_terminal_size()
 
             if (current_x, current_y) != (self.twidth, self.theight):
                 # update_screen(main_menu) Should do the below
@@ -217,13 +227,14 @@ class OptionsDisplay:
                 # sleep(0.2)
 
             # Wait for keyboard input
-            key = keyboard.read_key()
+            key = keyboard.read_key(suppress=True)
+
             match key:
                 case "esc":
                     return
                 case "1":
                     Utils.transition()
-                    self.console_height_menu()
+                    # Console height sub-menu
                     Utils.transition()
                     self.con.print(self.layout)
                     return
@@ -233,3 +244,12 @@ class OptionsDisplay:
                     pass
                 case "4":
                     pass
+
+
+
+
+
+
+
+
+

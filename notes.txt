@@ -82,3 +82,67 @@ injuries {
 consider changing screen classes, removing activate method and doing everything on init,
 then the object can be instantiated and loop, and once the loop ends the object can be tore down
 #####
+
+
+
+
+
+class MainMenuDisplay:
+    resume = Panel(Align(text2art("1.     Resume", font=Settings.font), align="center", vertical="middle"))
+    options = Panel(Align(text2art("2.     Options", font=Settings.font), align="center", vertical="middle"))
+    stats = Panel(Align(text2art("3.     Stats", font=Settings.font), align="center", vertical="middle"))
+    quit_game = Panel(Align(text2art("4.     Quit", font=Settings.font), align="center", vertical="middle"))
+
+    def __init__(self):
+        self.running = True
+
+        self.con = Console()
+        self.con.height = Settings.console_height
+
+        self.twidth = get_terminal_size()[0]
+        self.theight = get_terminal_size()[1]
+
+        self.layout = Layout()
+        self.layout.split_row(
+            Layout(Const.sidebar, ratio=1),
+            Layout(name="Center", ratio=2),
+            Layout(Const.sidebar, ratio=1)
+        )
+        self.layout["Center"].split_column(
+            Layout(MainMenuDisplay.resume),
+            Layout(MainMenuDisplay.options),
+            Layout(MainMenuDisplay.stats),
+            Layout(MainMenuDisplay.quit_game)
+        )
+        self.con.print(self.layout)
+
+    def show(self):
+        Utils.transition()
+        self.con.print(self.layout)
+
+    def listen(self):
+        """
+        Listen for window resize and returns the matched key pressed as a string
+        """
+        while self.running:
+
+            # Resize window if it changes
+            current_x, current_y = get_terminal_size()
+            if (current_x, current_y) != (self.twidth, self.theight):
+                os.system(Settings.clear_cmd)
+                self.con.print(self.layout)
+
+            # Wait for keyboard input
+            key = keyboard.read_key()
+
+            match key:
+                case "esc":
+                    return key
+                case "1":
+                    return key
+                case "2":
+                    return key
+                case "3":
+                    return key
+                case "4":
+                    return key
