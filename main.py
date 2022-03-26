@@ -1,5 +1,13 @@
 import screen
+from settings import Settings
 import logging
+import os
+
+# Get OS
+if os.name == "posix":
+    Settings.clear = "clear"
+elif os.name == "nt":
+    Settings.clear = "cls"
 
 # Set up logger
 logger = logging.getLogger(__name__)
