@@ -1,0 +1,84 @@
+
+# board layout will be a list with codes relating to tiles and ints for number of blank tiles
+
+Levels will be saved as text files
+    - The file will contain 'Codes' which correspond to tile type and blank spaces
+    - An example Level file may look like:
+    - level file will need other information about the map as well as the layout, maybe the map files will be json
+            or and actual python object with data structure for layout and key spawns
+
+            ww, ww, ww, W, W, ww, ww, ww, ww, ww
+            ww, x, x, x, x, x, x, x, C, ww
+            ww, x, x, x, T, ww, ww, ww, ww, ww
+            ww, x, x, x, T, x, x, x, F, ww
+
+    -These codes will be fed into a factory function that will instantiate the appropriate object and append them to a list
+    -The values of these objects will be used to create the board display .contents = [x]
+    -drawing the board will be joining a list that is the objects contents/string values
+
+    A  B  C  D  E  F  G  H  I  J  K  L  M  N
+1  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+2  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+3  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+4  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+5  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+6  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+7  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+8  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+
+# tile = "[ ]"
+# print(tile*20)
+
+Would like the board to be read from a file, line by line and
+joined together with newline chars to create the board display.
+
+Level links will just load in a different level file.
+Levels can be zipped into an archive to further save space.
+unzip and read the text file and then delete it once finished to clean up memory
+
+Statistics Class that holds all stats and gets called when any recordable action happens,
+this will get pickled and saved/loaded for persistent stats on a save file.
+
+Save file will be a class that upon exiting game it will be populated with all required objects.
+Game object
+Current Player state
+Current Level
+Statistics
+This object will be serialized and saved and can be loaded and 'unpacked'
+
+
+                HUD INFO        Health bar, green circles, red -
+
+
+                      O O O O O O O O O O
+Cover: 60                                           Actions: O O O
+Health: 100                                         Movement: 2
+Ammo: 6/28                                          Enemies Visible: 2
+Armor: 23                                           Concealed: Y
+------------------------------------------------------------------------
+Inventory: 'I'  |  Character: 'I'  |  Help: 'H'  |  Line of Sight: 'S'
+
+
+
+Individual Body part health
+    -unique debuffs depending on where player is hit
+
+
+Player attrs
+    legs: 100
+    arms: 100
+    head: 100
+    body: 100
+
+# dict with injury name as key:value is list with 2 items. first is "modifier", second is the description of injury
+injuries {
+    "broken arm": [".50", "Can only use one handed weapons"]
+}
+
+
+
+Definitely
+
+
+Maybe
+    -Score
