@@ -1,0 +1,26 @@
+    A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z
+----v--v--v--v--v--v--v--v--v--v--v--v--v--v--v--v--v--v--v--v--v--v--v--v--v--v
+---
+ 1-
+ 2-
+ 3-
+ 4-
+ 5-                          --------------------------
+ 6-                              Neighborhood House
+ 7-                          --------------------------
+ 8-
+ 9-                             Threat Level: 0
+11-                             Random info: R
+12-                             Secrets:
+13-                             Difficulty: 1
+14-                             Random info: R
+15-
+16-
+18-
+19-
+20-
+21-
+22-
+---
+----^--^--^--^--^--^--^--^--^--^--^--^--^--^--^--^--^--^--^--^--^--^--^--^--^--^
+    A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z

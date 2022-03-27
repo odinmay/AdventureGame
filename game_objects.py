@@ -11,14 +11,6 @@ class Game:
         self.current_level = "Level Object"
 
 
-class Map:
-    def __init__(self):
-        self.layout = []
-        self.map_name = "Map Name Placeholder"
-        self.map_path = "Path To Map Location"
-        # Item and enemy spawn locaions?
-
-
 # Actors such as (Player, Enemy, Creature, vehicle)
 class Actor:
     def __init__(self):
@@ -76,6 +68,9 @@ class Attributes:
     def increase_stat(self, stat, amount):
         self.stats[stat] += amount
 
+    def decrease_stat(self, stat, amount):
+        pass
+
 
 class Player(Actor):
     pass
@@ -132,6 +127,21 @@ class Enemy(Actor):
     pass
 
 
+class GameMap:
+    def __init__(self, name, intro_path, lvl_path):
+        self.name = name
+        self.lvl_view = ""  # Computed view/read from file
+        self.intro_view = ""
+        self.lvl_path = lvl_path
+        self.intro_path = intro_path
+
+        with open(self.intro_path, "r", encoding="utf-8") as f:
+            self.intro_view = f.read()
+
+        with open(self.lvl_path, "r", encoding="utf-8") as f:
+            self.lvl_view = f.read()
+
+
 # Types of tiles:subclasses Door Wall Furniture Hazard Waypoint
 class Tile:
     def __init__(self):
@@ -182,3 +192,7 @@ class Wall(Tile):
             case "Concrete":
                 self.health = 300
                 self.bullet_passthrough = False
+
+
+class Levels:
+    NH1 = GameMap("Neighborhood House", "./levels/NH/NH1_intro.txt", "./levels/NH/NH1_map.txt")

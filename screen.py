@@ -5,10 +5,12 @@ from rich.align import Align
 from rich.console import Console
 from rich.layout import Layout
 from art import text2art
+from game_objects import GameMap
 from settings import Settings
 import keyboard
 from utils import Utils, Const
 from shutil import get_terminal_size
+from time import sleep
 
 # Set up the logger
 logger = logging.getLogger(__name__)
@@ -26,6 +28,9 @@ class Screen:
     def show(self):
         Utils.transition()
         self.con.print(self.layout)
+
+    def set_height(self, height):
+        self.con.height = Settings.console_height
 
     def resize_if_needed(self):
         current_x, current_y = get_terminal_size()
@@ -65,17 +70,9 @@ class MenuWindow(Screen):
             # Wait for keyboard input
             key = keyboard.read_key(suppress=True)
 
-            match key:
-                case "esc":
-                    return key
-                case "1":
-                    return key
-                case "2":
-                    return key
-                case "3":
-                    return key
-                case "4":
-                    return key
+            usable_keys = ["esc", "1", "2", "3", "4"]
+            if key in usable_keys:
+                return key
 
 
 # Main Menu Display Class
@@ -105,17 +102,7 @@ class ActiveGameDisplay(Screen):
        """
 
     game_map = """
-            A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U
-        1  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
-        2  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
-        3  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
-        4  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
-        5  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
-        6  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
-        7  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
-        8  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
-        9  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
-       10  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+
     """
 
     def __init__(self):
@@ -127,9 +114,10 @@ class ActiveGameDisplay(Screen):
             Layout(name="Center", ratio=2),
             Layout(Const.sidebar, ratio=1)
         )
-        # Split the center into 2. Map on top and HUD on the bottom
+        # Split the center into 2. GameMap on top and HUD on the bottom
         self.layout["Center"].split_column(
-            Layout(Panel(ActiveGameDisplay.game_map, title_align="center", title=f"4th St. Library", padding=0),
+            Layout(Panel(Align(ActiveGameDisplay.game_map, align="center", vertical="top"), title_align="center",
+                         title=f"4th St. Library", padding=2),
                    name="MAP", ratio=2),
             Layout(Panel(ActiveGameDisplay.hud, title=f"Buster Scruggs: Level 12", title_align="center"), name="HUD",
                    size=8)
@@ -145,19 +133,20 @@ class ActiveGameDisplay(Screen):
             # Wait for keyboard input
             key = keyboard.read_key(suppress=True)
 
-            match key:
-                case "esc":
-                    return key
-                case "1":
-                    return key
-                case "2":
-                    return key
-                case "3":
-                    return key
-                case "4":
-                    return key
-                case "i":
-                    return key
+            usable_keys = ["esc", "1", "2", "3", "4", "i", "m", "c"]
+            if key in usable_keys:
+                return key
+
+    def load_map(self, gamemap: GameMap):
+        self.layout["MAP"].update(
+            Panel(Align(gamemap.intro_view, align="center", vertical="top"), title_align="center", title=f"{gamemap.name}",
+                  padding=2))
+        self.show()
+        sleep(5)
+        self.layout["MAP"].update(
+            Panel(Align(gamemap.lvl_view, align="center", vertical="top"), title_align="center", title=f"{gamemap.name}",
+                  padding=2))
+        self.show()
 
 
 class InventoryDisplay(Screen):
@@ -182,16 +171,107 @@ class InventoryDisplay(Screen):
             # Wait for keyboard input
             key = keyboard.read_key(suppress=True)
 
-            match key:
-                case "esc":
-                    return key
-                case "1":
-                    return key
-                case "2":
-                    return key
-                case "3":
-                    return key
-                case "4":
-                    return key
-                case "i":
-                    return key
+            usable_keys = ["esc", "1", "2", "3", "4", "i"]
+            if key in usable_keys:
+                return key
+
+
+class WorldMapDisplay(Screen):
+    """Add map: GameMap obj to init"""
+
+    def __init__(self):
+        super(WorldMapDisplay, self).__init__()
+
+        self.layout.split_row(
+            Layout(
+                Panel(Align(f"[white]{text2art('World GameMap', font='big')}[/white]", align="center", vertical="middle")),
+                ratio=4),
+            Layout(Panel(Align(f"[white]{text2art('LOC', font='big')}[/white]", align="center")), ratio=1)
+        )
+
+        self.show()
+
+    def listen(self):
+        # Listen for user input and if it matches a key, return it
+        while True:
+            # Resize window
+            self.resize_if_needed()
+
+            # Wait for keyboard input
+            key = keyboard.read_key(suppress=True)
+
+            usable_keys = ["esc", "m", "l"]
+            if key in usable_keys:
+                return key
+
+
+class LocalMapDisplay(Screen):
+    def __init__(self):
+        super(LocalMapDisplay, self).__init__()
+
+        self.layout.split_row(
+            Layout(Panel(
+                Align(f"[white]{text2art('Local Area GameMap', font='big')}[/white]", align="center", vertical="middle")),
+                   ratio=4),
+            Layout(Panel(Align(f"[white]{text2art('LOC', font='big')}[/white]", align="center")), ratio=1)
+        )
+
+        self.show()
+
+    def listen(self):
+        while True:
+            # Resize window
+            self.resize_if_needed()
+
+            # Wait for keyboard input
+            key = keyboard.read_key(suppress=True)
+
+            usable_keys = ["esc", "m", "l"]
+            if key in usable_keys:
+                return key
+
+
+class CharacterStatus(Screen):
+    def __init__(self):
+        super(CharacterStatus, self).__init__()
+
+        self.layout.split_column(
+            Layout(Panel("Top"), ratio=1, name="Top"),
+            Layout(Panel("Character Status/Level info"), ratio=4, name="Bottom")
+        )
+
+        self.layout["Top"].split_row(
+            Layout(Panel(Align(f"[white]{text2art('Character Loadout', font='big')}[/white]", align="center")), ratio=1,
+                   name="TopLeft"),
+            Layout(Panel(Align(f"[white]{text2art('Character Stats', font='big')}[/white]", align="center")), ratio=1,
+                   name="TopRight"),
+        )
+
+        self.layout["Bottom"].split_row(
+            Layout(Panel("Left"), ratio=1, name="Left"),
+            Layout(Panel("Right"), ratio=1, name="Right")
+        )
+
+        self.layout["Left"].split_row(
+            Layout(Panel("Player Picture Here"), ratio=1),
+            Layout(Panel("Equipment"), ratio=1)
+        )
+
+        self.layout["Right"].split_row(
+            Layout(Panel("Health\nStam\nStr\nDex"), ratio=1),
+            Layout(Panel("Budds/Debuffs"), ratio=1)
+        )
+
+        self.show()
+
+    def listen(self):
+        while True:
+            # Resize window
+            self.resize_if_needed()
+
+            # Wait for keyboard input
+            key = keyboard.read_key(suppress=True)
+
+            usable_keys = ["esc", "c"]
+            if key in usable_keys:
+                return key

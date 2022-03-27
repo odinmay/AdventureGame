@@ -24,10 +24,15 @@ class GameMem:
     def __init__(self):
         logger.debug(f"{self.__class__} initialized.")
         logger.info("GameMem object has been created. Used for storing screens and other gamestate objects in memory")
-        self.main_window = screen.ActiveGameDisplay()
-        self.main_menu = None
-        self.options = None
+        ################# Screens ##########################
+        self.main_game_window = screen.ActiveGameDisplay()
+        self.main_menu_window = None
+        self.options_window = None
         self.inv_window = None
+        self.world_map_window = None
+        self.local_map_window = None
+        self.character_window = None
+        ####################################################
 
         self.player_inv = go.Inventory()
 
@@ -45,6 +50,9 @@ game.player_inv.add_item(ten_dollars, "1")
 weed_pen = go.Item("Weed Pen", "The good stuff, hittin the pen!", "0.2", "50")
 game.player_inv.add_item(weed_pen, "1")
 game.player_inv.add_item(weed_pen, "12")
+
+shungite = go.Item("Shungite", "I think he is in jail..", "2", "1000")
+game.player_inv.add_item(shungite, "10")
 """End Test Items"""
 
 # MAIN GAME LOOP
@@ -52,24 +60,25 @@ while True:
     # Main game window is drawn on instantiated on GameMem init
     # Then we listen for the returned key, this wont return until
     # a key match is pressed
-    # game.main_window.show()
-    usr_choice = game.main_window.listen()
+    # game.main_game_window.show()
+    game.main_game_window.load_map(go.Levels.NH1)
+    usr_choice = game.main_game_window.listen()
     logger.info("Listening for input on main window")
 
     # In Main Game window
     if usr_choice == "esc":
         logger.debug("User pressed 'esc'")
         Utils.transition()
-        game.main_menu = screen.PauseDisplay()
-        usr_choice = game.main_menu.listen()
+        game.main_menu_window = screen.PauseDisplay()
+        usr_choice = game.main_menu_window.listen()
 
         # In Main Menu
         if usr_choice == "1":
-            game.main_window.show()
+            game.main_game_window.show()
         elif usr_choice == "2":
-            game.options = screen.OptionsDisplay()
-            game.options.show()
-            usr_choice = game.options.listen()
+            game.options_window = screen.OptionsDisplay()
+            game.options_window.show()
+            usr_choice = game.options_window.listen()
 
             # In Options Menu
             if usr_choice == "1":
@@ -79,17 +88,21 @@ while True:
 
                 # TODO The console height is not changing because the obj is instantiated at creation and the console variable is set then | FIX: refresh the variable
                 if usr_choice == "1":
-                    Settings.console_height = 35
+                    game.main_game_window.set_height(40)
+                    game.main_game_window.show()
                 elif usr_choice == "2":
-                    Settings.console_height = 40
+                    game.main_game_window.set_height(60)
+                    game.main_game_window.show()
                 elif usr_choice == "3":
-                    Settings.console_height = 45
+                    game.main_game_window.set_height(70)
+                    game.main_game_window.show()
                 elif usr_choice == "4":
-                    Settings.console_height = 50
+                    game.main_game_window.set_height(80)
+                    game.main_game_window.show()
 
         # In Main Menu
         elif usr_choice == "4":
-            game.main_window.show()
+            game.main_game_window.show()
 
     # In MainGame Window, Clicked I for inventory
     elif usr_choice == "i":
@@ -97,4 +110,27 @@ while True:
         game.inv_window.show()
         usr_choice = game.inv_window.listen()
         if usr_choice == "esc":
-            game.main_window.show()
+            game.main_game_window.show()
+
+    # IN Main Game Window
+    elif usr_choice == "m":
+        game.world_map_window = screen.WorldMapDisplay()
+        game.world_map_window.show()
+        usr_choice = game.world_map_window.listen()
+        if usr_choice == "l":
+            game.local_map_window = screen.LocalMapDisplay()
+            game.local_map_window.show()
+            usr_choice = game.local_map_window.listen()
+            if usr_choice == "m":
+                game.world_map_window.show()
+
+        elif usr_choice == "esc" or usr_choice == "m":
+            game.main_game_window.show()
+
+    # In Char Menu
+    elif usr_choice == "c":
+        game.character_window = screen.CharacterStatus()
+        game.character_window.show()
+        usr_choice = game.character_window.listen()
+        if usr_choice == "c":
+            game.main_game_window.show()

@@ -70,7 +70,7 @@ layout.split_row(
     Layout(name="Center", ratio=2),
     Layout(SIDEBAR, ratio=1)
 )
-# Split the center to a Map on top and HUD/UI on the bottom
+# Split the center to a GameMap on top and HUD/UI on the bottom
 layout["Center"].split_column(
     Layout(MAP, name="MAP", ratio=2),
     Layout(HUD, name="HUD",size=8)
