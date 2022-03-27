@@ -1,14 +1,8 @@
 """Object definitions for the game"""
-import os
-import keyboard
-from rich.console import Console
-from rich.layout import Layout
-from rich.panel import Panel
-from rich.align import Align
-from rich.prompt import Prompt,Confirm
-from art import text2art
-from time import sleep
-from utils import Utils
+import logging
+from rich.table import Table
+
+logger = logging.getLogger(__name__)
 
 
 class Game:
@@ -47,11 +41,11 @@ class Actor:
 
 
 class Item:
-    def __init__(self):
-        self.name = "Name Placeholder"
-        self.description = "Generic Description of item"
-        self.weight = 0
-        self.value = 0
+    def __init__(self, name, description, weight, value):
+        self.name = name
+        self.description = description
+        self.weight = weight
+        self.value = value
         # self.is_equipped = False use in a subclass object
 
 
@@ -85,6 +79,53 @@ class Attributes:
 
 class Player(Actor):
     pass
+
+
+class Inventory:
+    def __init__(self):
+        # Dict for storing inv data
+        self._inv = {}
+
+        # Setup visual inv repr Table object
+        self.player_inv = Table(title="Items", expand=True)
+        self.player_inv.add_column("Quantity", justify="center")
+        self.player_inv.add_column("Name", justify="right")
+        self.player_inv.add_column("Weight", justify="right")
+        self.player_inv.add_column("Value", justify="right")
+
+    def get_inv_table(self) -> Table:
+        # Refresh inv table them return it
+        self.refresh_inv_table()
+        return self.player_inv
+
+    def refresh_inv_table(self):
+        # Recreate Table object (empty)
+        self.player_inv = Table(title="Items", expand=True)
+        self.player_inv.add_column("Quantity", justify="center")
+        self.player_inv.add_column("Name", justify="right")
+        self.player_inv.add_column("Weight", justify="right")
+        self.player_inv.add_column("Value", justify="right")
+
+        # Rebuild the table using the _inv data
+        for item in self._inv.values():
+            row_str = ",".join(item)
+            self.player_inv.add_row(*row_str.split(','))
+
+    def add_item(self, item: Item, qty: str):
+        # If there is an item in the database already
+        if self._inv.get(item.name):
+            # TODO: Add error checking on this type cast. It will error eventually
+            new_qty = int(self._inv[item.name][0]) + int(qty)
+            self._inv[item.name][0] = str(new_qty)
+
+        else:
+            self._inv[item.name] = [qty, item.name, item.weight, item.value]
+
+        self.refresh_inv_table()
+
+    # TODO Implement item removal function
+    def remove_item(self, item: Item, qty: int):
+        logger.info(f"x{qty} {item.name} removed from inventory.")
 
 
 class Enemy(Actor):
