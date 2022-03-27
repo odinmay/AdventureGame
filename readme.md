@@ -160,11 +160,12 @@ These are the Python libraries I currently use for this game
 - [ ] Find standard grid boundaries
 - [ ] Implement a mapping/factory for assigning tile instances to the board grid
   - [ ] Get input for this factory method from a text file. This will allow levels to be saved as text codes into a file and read in line by line
-- [ ] Create an example map
+- [x] Create an example map
   - [ ] Add spawn point for player
 - [ ] Implement logic for tiles knowing their location/neighbors
 - [ ] Character creation screen/prompts
-- [ ] Implement an inventory screen using rich Tables
+- [x] Implement an inventory screen using rich Tables
+  - [ ] Make inventory usable (navigate logic)
 - [ ] Create equip methods on player so equipable items/weapons can attach to player
 
 <br>
