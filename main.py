@@ -44,14 +44,14 @@ os.system(Settings.clear_cmd)
 game = GameMem()
 
 """Test Items Remove"""
-ten_dollars = go.Item("10 Dollar Bill", "worth about $9.94 prolly", "0.1", "10")
+ten_dollars = go.Item("10 Dollar Bill", "Cold Hard Cash", "0.1", "10")
 game.player_inv.add_item(ten_dollars, "1")
 
-weed_pen = go.Item("Weed Pen", "The good stuff, hittin the pen!", "0.2", "50")
+weed_pen = go.Item("Weed Pen", "hittin' the pen!", "0.2", "50")
 game.player_inv.add_item(weed_pen, "1")
 game.player_inv.add_item(weed_pen, "12")
 
-shungite = go.Item("Shungite", "I think he is in jail..", "2", "1000")
+shungite = go.Item("Shungite", "I think he's jail or something..", "2", "1000")
 game.player_inv.add_item(shungite, "10")
 """End Test Items"""
 

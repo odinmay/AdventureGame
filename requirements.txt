@@ -1,0 +1,6 @@
+art==5.5
+commonmark==0.9.1
+keyboard==0.13.5
+Pygments==2.11.2
+rich==12.0.1
+textual==0.1.17

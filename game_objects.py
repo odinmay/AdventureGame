@@ -1,7 +1,7 @@
 """Object definitions for the game"""
 import logging
 from rich.table import Table
-
+from rich.box import ASCII
 logger = logging.getLogger(__name__)
 
 
@@ -82,9 +82,10 @@ class Inventory:
         self._inv = {}
 
         # Setup visual inv repr Table object
-        self.player_inv = Table(title="Items", expand=True)
+        self.player_inv = Table(box=ASCII, expand=True)
         self.player_inv.add_column("Quantity", justify="center")
         self.player_inv.add_column("Name", justify="right")
+        self.player_inv.add_column("Description", justify="right")
         self.player_inv.add_column("Weight", justify="right")
         self.player_inv.add_column("Value", justify="right")
 
@@ -95,9 +96,10 @@ class Inventory:
 
     def refresh_inv_table(self):
         # Recreate Table object (empty)
-        self.player_inv = Table(title="Items", expand=True)
+        self.player_inv = Table(box=ASCII, expand=True)
         self.player_inv.add_column("Quantity", justify="center")
         self.player_inv.add_column("Name", justify="right")
+        self.player_inv.add_column("Description", justify="right")
         self.player_inv.add_column("Weight", justify="right")
         self.player_inv.add_column("Value", justify="right")
 
@@ -114,7 +116,7 @@ class Inventory:
             self._inv[item.name][0] = str(new_qty)
 
         else:
-            self._inv[item.name] = [qty, item.name, item.weight, item.value]
+            self._inv[item.name] = [qty, item.name, item.description, item.weight, item.value]
 
         self.refresh_inv_table()
 
@@ -140,58 +142,6 @@ class GameMap:
 
         with open(self.lvl_path, "r", encoding="utf-8") as f:
             self.lvl_view = f.read()
-
-
-# Types of tiles:subclasses Door Wall Furniture Hazard Waypoint
-class Tile:
-    def __init__(self):
-        # initialize with its position potentially
-        self.name = "The Omega Tile"
-        self.contents = None
-        self._position = [1, 4]
-        self.bullet_passthrough = True
-        self.player_passthrough = True
-        self.can_cover = False
-        # Slippery?
-
-    def __str__(self):
-        return self.name
-
-    @property
-    def position(self):
-        return self._position
-
-    @position.setter
-    def position(self, position):
-        self._position = position
-
-
-class Wall(Tile):
-    """
-    This is a wall, it provides cover
-    Depending on its material it may be able to be shot through,
-    if the shot hits it can damage the player but won't damage them as much
-    """
-
-    def __init__(self):
-        """Initialize Tile Parent Object"""
-        super(Wall, self).__init__()
-        self.can_cover = True
-        self.player_passthrough = False
-        self.material = "Wood"
-        self.health = None
-
-        # Setting Wall Health
-        match self.material:
-            case "Wood":
-                self.health = 100
-                self.bullet_passthrough = True
-            case "drywall":
-                self.health = 50
-                self.bullet_passthrough = True
-            case "Concrete":
-                self.health = 300
-                self.bullet_passthrough = False
 
 
 class Levels:

@@ -20,7 +20,7 @@ class Screen:
     def __init__(self):
         self.con = Console()
         self.layout = Layout()
-        self.con.height = Settings.console_height
+        self.con.height = 45
         self.twidth = get_terminal_size()[0]
         self.theight = get_terminal_size()[1]
         logger.info(f"{self.__class__} initialized")
@@ -101,9 +101,7 @@ class ActiveGameDisplay(Screen):
        Inventory: 'I'  |  Character: 'I'  |  Help: 'H'  |  Line of Sight: 'S'
        """
 
-    game_map = """
-
-    """
+    game_map = ""
 
     def __init__(self):
         super(ActiveGameDisplay, self).__init__()
@@ -142,7 +140,7 @@ class ActiveGameDisplay(Screen):
             Panel(Align(gamemap.intro_view, align="center", vertical="top"), title_align="center", title=f"{gamemap.name}",
                   padding=2))
         self.show()
-        sleep(5)
+        sleep(2)
         self.layout["MAP"].update(
             Panel(Align(gamemap.lvl_view, align="center", vertical="top"), title_align="center", title=f"{gamemap.name}",
                   padding=2))
@@ -241,9 +239,9 @@ class CharacterStatus(Screen):
         )
 
         self.layout["Top"].split_row(
-            Layout(Panel(Align(f"[white]{text2art('Character Loadout', font='big')}[/white]", align="center")), ratio=1,
+            Layout(Panel(Align(f"[white]{text2art('Loadout', font='big')}[/white]", align="center")), ratio=1,
                    name="TopLeft"),
-            Layout(Panel(Align(f"[white]{text2art('Character Stats', font='big')}[/white]", align="center")), ratio=1,
+            Layout(Panel(Align(f"[white]{text2art('Status', font='big')}[/white]", align="center")), ratio=1,
                    name="TopRight"),
         )
 

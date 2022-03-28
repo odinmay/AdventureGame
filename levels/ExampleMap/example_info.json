@@ -1,0 +1,12 @@
+{
+  "name" : "Example Name",
+  "map_tiles": {
+    "D": "door",
+    "P": "pool",
+    "W": "window",
+    "#": "wall",
+    "C": "car"
+  },
+  "spawn_point": "1,3",
+  "threat_level": "2"
+}
