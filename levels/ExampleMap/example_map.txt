@@ -1,25 +1,25 @@
  A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l
 |v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v
-|  # # # # #                                                                |
-|  #       #                                                                |
-|  # # D # #                                                                |
+|                                                        F     H            |
+|  # # # # # # # # # # # # # # # # # # # # # #           F     H            |
+|  #                                         #           F     H     T T    |
+|  #                                         #           F     H     T T    |
+|  #                                         w           F     H            |
+|  # # W W # # # # # # # # # # #             #           F     H            |
+|                              D             #                 H            |
+|                              #             #                 H H          |
+|            B B B B B B B B   #             #           F         H        |
+|                              #             #           F           H H H  |
+|                              #             w           F                  |
+|                              #             #           F                  |
+|                              #             #           F                  |
+|                              # # D D D D # #           F F F F F F F F F F|
 |                                                                           |
-|                                                                           |
-|                                                                           |
-|                                                                           |
-|                                                                           |
-|                                                                           |
-|                                                                           |
-|                                                                           |
-|                                                                           |
-|                                                                           |
-|                                                                           |
-|                                                                           |
-|                                                                           |
-|                                                                           |
-|                                                                           |
-|                                                                           |
-|                                                                           |
-|                                                                           |
-|                                                                           |
+|            C C C C C                                                      |
+|            C C C C C                                                      |
+|            C C C C C               C                                      |
+|                                  C C C                                    |
+|                                C C C C C                                  |
+|                              C C C C C                                    |
+|                              C C C C                                      |
 |^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^|

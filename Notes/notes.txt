@@ -17,7 +17,7 @@ Levels will be saved as text files
     -drawing the board will be joining a list that is the objects contents/string values
 
     A  B  C  D  E  F  G  H  I  J  K  L  M  N
-1  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+1  [ ][ ][ ][x][x][ ][ ][ ][ ][ ][ ][ ]
 2  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
 3  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
 4  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]

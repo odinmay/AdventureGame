@@ -73,7 +73,31 @@ class Attributes:
 
 
 class Player(Actor):
-    pass
+    def __init__(self):
+        super(Actor).__init__()
+
+        self.name = "PLACEHOLDER"
+        self.level = 1
+        self.attributes = Attributes()
+        self.health = 100
+        self.armor_value = 0
+        self.actions = []
+        self.concealed = True
+        self.ammo = {
+            "9mm": "0",
+            ".45": "0",
+            ".22": "0"
+        }
+
+    def reload(self):
+        pass
+
+    def use_consumable(self, item: Item):
+        pass
+
+    def equip_item(self, item: Item):
+        pass
+
 
 
 class Inventory:

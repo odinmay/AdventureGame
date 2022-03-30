@@ -15,10 +15,51 @@ from time import sleep
 # Set up the logger
 logger = logging.getLogger(__name__)
 
+test_art = (r'''
+
+#####################|                                
+####################/                                 
+###################|       ___________                
+##################/_______/```````````\______________ 
+#############___/`````````````````````````````"""""""|
+############/  ``````````````````````""""""""""""""" |
+############|```````````````"""""""""""""""""""   __/ 
+###########_/\_____```````"""""""________________/    
+##########/       \____________/                      
+#######/                                              
+##/                                                   
+                                                      
+                                                      
+                                                      
+                                                      
+                                                      
+                                                      
+                                                      
+                                ##                    
+                               #####                  
+                               #### # #               
+                                 #####                
+                                #  ###                
+                                  ##  #               
+                                    ## #              
+                                      #               
+                                       #              
+                                      _||             
+                 ,                 ._/  /---+-\_      
+               #=\  #             /#_,/~~~     |\.    
+          ,___    \/ /#          /   /_ __ __ /#'|    
+            # \__#/ /___#       /      |   __   __\   
+              /  \\/# \*`      / [][ ] |  /  | |  ##  
+              ` /==|\          |       | T__ | \._/|  
+               #  /|*\        =L  _ _ _|__  \_     |  
+                  |*| `       /_______/|  `,__./==\|  
+                  |#|        ||=======||\___ __._ _|  
+________    _____/##|________||=======|| \  `  _`   \ 
+ |/|=|=|=* #=|/|/###\|*|=|==|||=======|| |    | |    |''')
 
 class Screen:
     def __init__(self):
-        self.con = Console()
+        self.con = Console(style="yellow on black")
         self.layout = Layout()
         self.con.height = 45
         self.twidth = get_terminal_size()[0]
@@ -120,7 +161,6 @@ class ActiveGameDisplay(Screen):
             Layout(Panel(ActiveGameDisplay.hud, title=f"Buster Scruggs: Level 12", title_align="center"), name="HUD",
                    size=8)
         )
-        self.show()
 
     def listen(self):
         # Listen for user input and if it matches a key, return it
@@ -137,14 +177,15 @@ class ActiveGameDisplay(Screen):
 
     def load_map(self, gamemap: GameMap):
         self.layout["MAP"].update(
-            Panel(Align(gamemap.intro_view, align="center", vertical="top"), title_align="center", title=f"{gamemap.name}",
+            Panel(Align(gamemap.intro_view, align="center", vertical="top"), title_align="center",
+                  title=f"{gamemap.name}",
                   padding=2))
         self.show()
         sleep(2)
         self.layout["MAP"].update(
-            Panel(Align(gamemap.lvl_view, align="center", vertical="top"), title_align="center", title=f"{gamemap.name}",
+            Panel(Align(gamemap.lvl_view, align="center", vertical="top"), title_align="center",
+                  title=f"{gamemap.name}",
                   padding=2))
-        self.show()
 
 
 class InventoryDisplay(Screen):
@@ -182,7 +223,8 @@ class WorldMapDisplay(Screen):
 
         self.layout.split_row(
             Layout(
-                Panel(Align(f"[white]{text2art('World GameMap', font='big')}[/white]", align="center", vertical="middle")),
+                Panel(Align(f"[white]{text2art('World GameMap', font='big')}[/white]", align="center",
+                            vertical="middle")),
                 ratio=4),
             Layout(Panel(Align(f"[white]{text2art('LOC', font='big')}[/white]", align="center")), ratio=1)
         )
@@ -209,8 +251,9 @@ class LocalMapDisplay(Screen):
 
         self.layout.split_row(
             Layout(Panel(
-                Align(f"[white]{text2art('Local Area GameMap', font='big')}[/white]", align="center", vertical="middle")),
-                   ratio=4),
+                Align(f"[white]{text2art('Local Area GameMap', font='big')}[/white]", align="center",
+                      vertical="middle")),
+                ratio=4),
             Layout(Panel(Align(f"[white]{text2art('LOC', font='big')}[/white]", align="center")), ratio=1)
         )
 
@@ -273,3 +316,71 @@ class CharacterStatus(Screen):
             usable_keys = ["esc", "c"]
             if key in usable_keys:
                 return key
+
+
+class SplashScreen(Screen):
+    def __init__(self):
+        super(SplashScreen, self).__init__()
+
+        self.layout.split_column(
+            Layout(Panel(Align(text2art("*=*      Wasted   Lands      *=*", font="big"), align="center")), ratio=1, name="Top"),
+            Layout(Panel(Align(text2art(f"Produced     by     Aldo\nCreated     by     Odin\nPublished     by     GWA", font='big'), align="center")), ratio=4, name="Bottom")
+        )
+
+        self.show()
+
+    def show(self):
+        Utils.transition()
+        self.con.print(self.layout)
+        sleep(2)
+        return
+
+    def listen(self):
+        while True:
+            # Resize window
+            self.resize_if_needed()
+
+            # Wait for keyboard input
+            key = keyboard.read_key(suppress=True)
+
+            usable_keys = ["esc", "1", "2", "3", "4"]
+            if key in usable_keys:
+                return key
+
+
+class MainMenu(Screen):
+    def __init__(self):
+        super(MainMenu, self).__init__()
+
+        self.layout.split_row(
+            Layout(Panel(test_art), ratio=1),
+            Layout(Panel(""), name="Middle", ratio=2),
+            Layout(Panel(test_art), ratio=1)
+        )
+
+        self.layout["Middle"].split_column(
+            Layout(Panel(Align(text2art("Wasted    Lands", font="big"), align="center")), ratio=1, name="Top"),
+            Layout(Panel(""), ratio=4, name="Bottom")
+        )
+
+        self.layout["Bottom"].split_column(
+            Layout(Panel(Align(text2art("New Game", font="big"), align="center"))),
+            Layout(Panel(Align(text2art("Load Game", font="big"), align="center"))),
+            Layout(Panel(Align(text2art("Options", font="big"), align="center"))),
+            Layout(Panel(Align(text2art("Quit Game", font="big"), align="center")))
+        )
+
+        self.show()
+
+    def listen(self):
+        while True:
+            # Resize window
+            self.resize_if_needed()
+
+            # Wait for keyboard input
+            key = keyboard.read_key(suppress=True)
+
+            usable_keys = ["esc", "1", "2", "3", "4"]
+            if key in usable_keys:
+                return key
+

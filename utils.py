@@ -4,6 +4,8 @@ This file will hold small userful functions that are used throughout the game lo
 from time import sleep
 import os
 import logging
+
+import keyboard
 from rich.panel import Panel
 from settings import Settings
 import json
@@ -24,6 +26,10 @@ class Utils:
             # Dictionary of map_info.json data
             return json.load(json_file)
 
+    @staticmethod
+    def clear_input(self):
+        for i in range(100):
+            keyboard.send("backspace")
 
 
 class Const:
