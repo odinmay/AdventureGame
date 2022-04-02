@@ -73,11 +73,22 @@ class Attributes:
 
     def increase_stat(self, stat: str, amount: int) -> None:
         """
-        stat type: str"""
+        Increases the player stat by the desired amount
+
+        :param stat: the stat to increase
+        :param amount: amount to increase stat by
+        :type stat: str
+        :type amount: int
+        :return: None
+        """
         self.stats[stat] += amount
 
     def decrease_stat(self, stat: str, amount: int) -> None:
-        self.stats[stat] -= amount
+        """Decreases user stat unless it would go negative in which case it sets to 0"""
+        if (self.stats[stat] - amount) < 0:
+            self.stats[stat] = 0
+        else:
+            self.stats[stat] -= amount
 
 
 class Player(Actor):
