@@ -2,6 +2,7 @@ from shutil import get_terminal_size
 from time import sleep
 import logging
 import os
+from typing import Tuple
 from rich.panel import Panel
 from rich.align import Align
 from rich.table import Table
@@ -208,7 +209,7 @@ class ActiveGameDisplay(Screen):
 
 
 class InventoryDisplay(Screen):
-    def __init__(self, table_data):  #  TODO Type hint tuple
+    def __init__(self, table_data: Tuple[Table, list]):  #  TODO Type hint tuple
         super(InventoryDisplay, self).__init__()
         for item_row in table_data[1]:
             if "-->" in item_row:
@@ -222,11 +223,10 @@ class InventoryDisplay(Screen):
             Layout(Const.sidebar, ratio=1)
         )
 
-    def redraw_inv(self, table_data):
+    def redraw_inv(self, table_data: Tuple[Table, list]):
         for item_row in table_data[1]:
             if "-->" in item_row:
                 item_panel = Panel(item_row[-1], padding=1)
-
 
         logger.info("Redrawing inventory table")
         self.layout.split_row(

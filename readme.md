@@ -105,10 +105,14 @@
 
 <hr>
 
-![Game Screenshot](./images/Game%20UI.png)
+### Main Menu
+
+![Game Screenshot](./images/MainMenu.png)
 <hr>
 
-![Game Menu Screenshot](./images/Pause%20Menu%20UI.png)
+### Inventory(WIP)
+
+![Game Menu Screenshot](./images/Inventory.png)
 
 <hr>
 
@@ -151,13 +155,13 @@ These are the Python libraries I currently use for this game
 
 - [x] Pause Menu Proof of concept
 - [x] Create Main Game Layout
-- [ ] Implement a Boot screen
+- [x] Implement a Boot screen
 - [ ] Implement Options menu with font/color option
 - [ ] Create a custom theme
     - [ ] Create a second theme
     - [ ] Implement a change theme option
 - [ ] Brainstorm a setting. (Post-apocolyptic)
-- [ ] Find standard grid boundaries
+- [x] Find standard grid boundaries
 - [ ] Implement a mapping/factory for assigning tile instances to the board grid
   - [ ] Get input for this factory method from a text file. This will allow levels to be saved as text codes into a file and read in line by line
 - [x] Create an example map
@@ -165,7 +169,7 @@ These are the Python libraries I currently use for this game
 - [ ] Implement logic for tiles knowing their location/neighbors
 - [ ] Character creation screen/prompts
 - [x] Implement an inventory screen using rich Tables
-  - [ ] Make inventory usable (navigate logic)
+  - [x] Make inventory usable (navigate logic)
 - [ ] Create equip methods on player so equipable items/weapons can attach to player
 
 <br>

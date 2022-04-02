@@ -1,5 +1,6 @@
 """Object definitions for the game"""
 import logging
+from typing import Tuple
 from rich.table import Table
 from rich.box import ASCII
 from utils import Utils
@@ -135,10 +136,10 @@ class Inventory:
         self.inv_table.add_column("Value", justify="right")
         self.inv_table.add_column("Weight", justify="right")
 
-    def get_inv_table(self):  # TODO Add type hint for tuple
+    def get_inv_table(self) -> Tuple[Table, list]:
         # Refresh inv table them return it
         self.refresh_inv_table()
-        return (self.inv_table, self._inv)
+        return self.inv_table, self._inv
 
     def refresh_inv_table(self):
         # Recreate Table object (empty)
@@ -165,9 +166,8 @@ class Inventory:
         """
         # If there is an item in the database already
         for row in self._inv:
-            if item.name in row:  # TODO Test to see if items with similar names effects this
-                # 'gun' and 'gun barrel'
-                # Item in table already
+            if item.name in row:
+                # Find item in inventory
                 old_qty = int(row[3])
                 old_qty += qty
                 return
@@ -177,16 +177,25 @@ class Inventory:
             self._inv.append(
                 ["-->", item.name, item.description, str(qty), str(item.value), str(item.weight), item.info_panel]
             )
-
+        #  Else add a new item row to the inv
         else:
             self._inv.append(
                 ["   ", item.name, item.description, str(qty), str(item.value), str(item.weight), item.info_panel]
             )
-
+        logger.info(f"x%qty %name added to inventory.", qty, item.name)
         self.refresh_inv_table()
 
-    # TODO Implement item removal function
     def remove_item(self, item: Item, qty: int):
+        for item_row in self._inv:
+            # Find matching item
+            if item.name in item_row:
+                # If new qty in negatives, just set at 0
+                if int(item_row[3]) - qty < 0:
+                    item_row[3] = 0
+                # Else perform the subtraction
+                else:
+                    new_qty = int(item_row[3]) - qty
+                    item_row[3] = new_qty
         logger.info(f"x%qty %name removed from inventory.", qty, item.name)
 
     def move_selection(self, direction: str) -> None:

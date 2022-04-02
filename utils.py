@@ -41,5 +41,10 @@ class Utils:
             counter += 1
         return counter
 
+    @staticmethod
+    def load_art(filename):
+        with open("./art/item_details/" + filename + ".txt", "r") as file:
+            return file.read()
+
 class Const:
     sidebar = Panel("")

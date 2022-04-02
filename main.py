@@ -57,12 +57,13 @@ os.system(Settings.clear_cmd)
 game = GameMem()
 
 
-#  TODO Screate a function for loading in all art in a specific dir save to dict with file name as key
-with open("./art/item_details/weed_pen.txt", "r") as file:
-    weed_pen_details = file.read()
+weed_pen_details = Utils.load_art("weed_pen")
 
-with open("./art/item_details/10_dollar_bill.txt", "r") as file:
-    ten_dollars_details = file.read()
+ten_dollars_details = Utils.load_art("10_dollar_bill")
+
+shotgun_details = Utils.load_art("shotgun")
+
+shungite_detais = Utils.load_art("shungite")
 
 ten_dollars = go.Item("10 Dollar Bill", "Cold Hard Cash", 10, 0.1, ten_dollars_details)  #  Add another arg with item art
 game.player_inv.add_item(ten_dollars, 1)
@@ -71,15 +72,15 @@ weed_pen = go.Item("Weed Pen", "hittin' the pen!", 50, 0.2, weed_pen_details)
 game.player_inv.add_item(weed_pen, 1)
 game.player_inv.add_item(weed_pen, 12)
 
-shungite = go.Item("Shungite", "I think he's jail or something..", 1000, 2, "placeholder")
+shungite = go.Item("Shungite", "I think he's jail or something..", 1000, 2, shungite_detais)
 game.player_inv.add_item(shungite, 10)
 
-shotgun = go.Item("12GA Shotgun", "The classic pump.", 300, 9, "placeholder")
+shotgun = go.Item("12GA Shotgun", "The classic pump.", 300, 9, shotgun_details)
 game.player_inv.add_item(shotgun, 1)
 
 
 
-# Show the splash Screen - its .show has 2 sec wait built in
+# Show the splash Screen - its .show has 3 sec wait built in
 game.splash_screen.show()
 
 # Instantiate and show the main menu
