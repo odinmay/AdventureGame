@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(
     filename="game.log",
     filemode="w",
-    level=logging.INFO,
+    level=logging.DEBUG,
     format='%(name)s:%(levelname)s:%(message)s:'
 )
 
@@ -144,12 +144,10 @@ if selection == "1":
                 if key_pressed == "up":
                     game.player_inv.move_selection("up")
                     game.inv_window.redraw_inv(game.player_inv.get_inv_table())
-                    game.inv_window.show()
                 #  Player presses down arrow in inventory
                 if key_pressed == "down":
                     game.player_inv.move_selection("down")
                     game.inv_window.redraw_inv(game.player_inv.get_inv_table())
-                    game.inv_window.show()
                 #  Player selects an item
                 if key_pressed == "enter":
                     game.player_inv.select_item()
