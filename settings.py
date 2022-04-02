@@ -1,7 +1,6 @@
 """
 All configurable settings will live here.
 """
-import os
 
 
 class Settings:

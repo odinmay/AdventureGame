@@ -4,6 +4,7 @@ import logging
 import os
 from rich.panel import Panel
 from rich.align import Align
+from rich.table import Table
 from rich.console import Console
 from rich.layout import Layout
 from art import text2art
@@ -64,18 +65,17 @@ class Screen:
     def __init__(self):
         self.con = Console(style="yellow on black")
         self.layout = Layout()
-        self.con.height = 45
+        self.con.height = Settings.console_height
         self.twidth = get_terminal_size()[0]
         self.theight = get_terminal_size()[1]
         logger.info(f"{self.__class__.__name__} initialized")
 
     def show(self):
         Utils.transition()
+        # Set to current height in settings
+        self.con.height = Settings.console_height
         logger.info(f'Drawing {self.__class__.__name__}')
         self.con.print(self.layout)
-
-    def set_height(self, height):
-        self.con.height = Settings.console_height
 
     def resize_if_needed(self):
         current_x, current_y = get_terminal_size()
@@ -85,7 +85,7 @@ class Screen:
 
 
 class MenuWindow(Screen):
-    def __init__(self, opt1, opt2, opt3, opt4):
+    def __init__(self, opt1: str, opt2: str, opt3: str, opt4: str):
         super(MenuWindow, self).__init__()
         self.opt1 = Panel(
             Align(text2art(f"1.  {opt1}", font=Settings.font), align="center", vertical="middle"))
@@ -108,7 +108,7 @@ class MenuWindow(Screen):
             Layout(self.opt4)
         )
 
-    def listen(self):
+    def listen(self) -> str:
         logger.info(f"{self.__class__.__name__} Listening for user input")
 
         # Listen for user input and if it matches a key, return it
@@ -125,7 +125,6 @@ class MenuWindow(Screen):
                 return key
 
 
-# Main Menu Display Class
 class PauseDisplay(MenuWindow):
     def __init__(self):
         super(PauseDisplay, self).__init__("Resume", "Options", "Stats", "Quit Game")
@@ -178,7 +177,7 @@ class ActiveGameDisplay(Screen):
                    size=8)
         )
 
-    def listen(self):
+    def listen(self) -> str:
         logger.info(f"{self.__class__.__name__}lassname Listening for user input")
 
         # Listen for user input and if it matches a key, return it
@@ -195,6 +194,7 @@ class ActiveGameDisplay(Screen):
                 return key
 
     def load_map(self, gamemap: GameMap):
+        """Loads map intro file, sleeps, then loads the actual map file"""
         self.layout["MAP"].update(
             Panel(Align(gamemap.intro_view, align="center", vertical="top"), title_align="center",
                   title=f"{gamemap.name}",
@@ -208,7 +208,7 @@ class ActiveGameDisplay(Screen):
 
 
 class InventoryDisplay(Screen):
-    def __init__(self, inv_table):
+    def __init__(self, inv_table: Table):
         super(InventoryDisplay, self).__init__()
 
         self.layout.split_row(
@@ -219,7 +219,7 @@ class InventoryDisplay(Screen):
             Layout(Const.sidebar, ratio=1)
         )
 
-    def redraw_inv(self, table):
+    def redraw_inv(self, table: Table):
         logger.info("Redrawing inventory table")
         self.layout.split_row(
             Layout(Const.sidebar, ratio=1),
@@ -229,7 +229,7 @@ class InventoryDisplay(Screen):
         )
         self.show()
 
-    def listen(self):
+    def listen(self) -> str:
         logger.info(f"{self.__class__.__name__} Listening for user input")
 
         # Listen for user input and if it matches a key, return it
@@ -262,7 +262,7 @@ class WorldMapDisplay(Screen):
                    ratio=1)
         )
 
-    def listen(self):
+    def listen(self) -> str:
         logger.info(f"{self.__class__.__name__} Listening for user input")
 
         # Listen for user input and if it matches a key, return it
@@ -293,7 +293,7 @@ class LocalMapDisplay(Screen):
                    ratio=1)
         )
 
-    def listen(self):
+    def listen(self) -> str:
         logger.info(f"{self.__class__.__name__} Listening for user input")
 
         # Listen for user input and if it matches a key, return it
@@ -344,7 +344,7 @@ class CharacterStatus(Screen):
             Layout(Panel("Budds/Debuffs"), ratio=1)
         )
 
-    def listen(self):
+    def listen(self) -> str:
         logger.info(f"{self.__class__.__name__} Listening for user input")
 
         # Listen for user input and if it matches a key, return it
@@ -405,7 +405,7 @@ class MainMenu(Screen):
             Layout(Panel(Align(text2art("Quit Game", font="big"), align="center")))
         )
 
-    def listen(self):
+    def listen(self) -> str:
         logger.info(f"{self.__class__.__name__} Listening for user input")
 
         # Listen for user input and if it matches a key, return it

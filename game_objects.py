@@ -71,13 +71,13 @@ class Attributes:
             "Coffee": ("You are feeling alert", False),
         }
 
-    def increase_stat(self, stat, amount):
+    def increase_stat(self, stat: str, amount: int) -> None:
         """
         stat type: str"""
         self.stats[stat] += amount
 
-    def decrease_stat(self, stat, amount):
-        pass
+    def decrease_stat(self, stat: str, amount: int) -> None:
+        self.stats[stat] -= amount
 
 
 class Player(Actor):
@@ -177,7 +177,7 @@ class Inventory:
     def remove_item(self, item: Item, qty: int):
         logger.info(f"x%qty %name removed from inventory.", qty, item.name)
 
-    def move_selection(self, direction):
+    def move_selection(self, direction: str) -> None:
         """Handles moving the active item arrow in the Item table"""
 
         if direction == "up":

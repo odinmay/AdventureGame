@@ -113,16 +113,16 @@ if selection == "1":
 
                     # TODO Fix console height scaling after user select if possible
                     if key_pressed == "1":
-                        game.active_game_window.set_height(50)
+                        Settings.console_height = 50
                         game.active_game_window.show()
                     elif key_pressed == "2":
-                        game.active_game_window.set_height(55)
+                        Settings.console_height = 55
                         game.active_game_window.show()
                     elif key_pressed == "3":
-                        game.active_game_window.set_height(60)
+                        Settings.console_height = 60
                         game.active_game_window.show()
                     elif key_pressed == "4":
-                        game.active_game_window.set_height(65)
+                        Settings.console_height = 65
                         game.active_game_window.show()
 
             # In Main Menu
