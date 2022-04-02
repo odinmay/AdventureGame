@@ -46,7 +46,7 @@ class StorageObjectTile(SolidTile):
             #"Search": self.rng_loot # Function gets called when getting value
         }
 
-    #TODO: def func for Random choice from loot table, maybe based on skill
+    #  TODO: def func for Random choice from loot table, maybe based on skill
 
 
 class Wall(Tile):

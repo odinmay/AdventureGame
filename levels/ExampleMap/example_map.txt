@@ -15,11 +15,11 @@
 |                              #             #           F                  |
 |                              # # D D D D # #           F F F F F F F F F F|
 |                                                                           |
-|            C C C C C                                                      |
-|            C C C C C                                                      |
-|            C C C C C               C                                      |
-|                                  C C C                                    |
-|                                C C C C C                                  |
+|            C C C C C                                             b b b b b|
+|            C C C C C                                             b       b|
+|            C C C C C               C                             b       b|
+|                                  C C C                           b b b b b|
+|                                C C C C C                         b b b b b|
 |                              C C C C C                                    |
 |                              C C C C                                      |
 |^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^|

@@ -1,21 +1,31 @@
+"""Runs main game loop and entire game. Main entry point"""
+import logging
+import os
 import screen
 from settings import Settings
-import logging
 from utils import Utils
 import game_objects as go
-import os
 
 # Setting up root logger
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename="game.log", filemode="w", level=logging.INFO, format='%(name)s:%(levelname)s:%(message)s:')
+logging.basicConfig(
+    filename="game.log",
+    filemode="w",
+    level=logging.INFO,
+    format='%(name)s:%(levelname)s:%(message)s:'
+)
+
 logger.info("Root logger initialized")
 
 
 # Class for holding obj states in memory
 class GameMem:
+    """Game class which holds all active game objects"""
     def __init__(self):
-        logger.debug(f"{self.__class__} initialized.")
-        logger.info("GameMem object has been created. Used for storing screens and other gamestate objects in memory")
+        logger.debug("%class initialized.", self.__class__)
+        logger.info("GameMem object has been created. Used for storing screens and other "
+                    "gamestate objects in memory")
+
         ################# Screens ##########################
         self.active_game_window = screen.ActiveGameDisplay()
         self.pause_menu_window = None
@@ -26,22 +36,18 @@ class GameMem:
         self.character_window = None
         self.splash_screen = screen.SplashScreen()
         self.main_menu = None
+        self.height_options = None
         self.item_popup_screen = None
         ####################################################
-
         self.player_inv = go.Inventory()
 
 
-"""
-Script execution logic begins here
-"""
-
 # Get OS info and set clear/cls command
 if os.name == "posix":
-    logger.debug(f"Linux operating system identified. 'cls' command will be used.")
+    logger.debug("Linux operating system identified. 'cls' command will be used.")
     Settings.clear_cmd = "clear"
 elif os.name == "nt":
-    logger.debug(f"Windows operating system identified. 'cls' command will be used.")
+    logger.debug("Windows operating system identified. 'cls' command will be used.")
     Settings.clear_cmd = "cls"
 
 # Initial console clear
@@ -105,7 +111,7 @@ if selection == "1":
                     game.height_options.show()
                     results = game.height_options.listen()
 
-                    # TODO The console height is not changing because of IDK WHY , instance related tho
+                    # TODO Fix console height scaling after user select if possible
                     if key_pressed == "1":
                         game.active_game_window.set_height(50)
                         game.active_game_window.show()
@@ -135,17 +141,17 @@ if selection == "1":
                     game.active_game_window.show()  # TODO Make this quit script
                     break
                 #  Player presses up arrow in inventory
-                elif key_pressed == "up":
+                if key_pressed == "up":
                     game.player_inv.move_selection("up")
                     game.inv_window.redraw_inv(game.player_inv.get_inv_table())
                     game.inv_window.show()
                 #  Player presses down arrow in inventory
-                elif key_pressed == "down":
+                if key_pressed == "down":
                     game.player_inv.move_selection("down")
                     game.inv_window.redraw_inv(game.player_inv.get_inv_table())
                     game.inv_window.show()
                 #  Player selects an item
-                elif key_pressed == "enter":
+                if key_pressed == "enter":
                     game.player_inv.select_item()
                     game.item_popup_screen = screen.ItemOptions()
                     game.item_popup_screen.show()
@@ -164,7 +170,7 @@ if selection == "1":
                 if key_pressed == "m":
                     game.world_map_window.show()
 
-            elif key_pressed == "esc" or key_pressed == "m":
+            elif key_pressed in ["esc", "m"]:
                 game.active_game_window.show()
 
         elif key_pressed == "c":  # Character Menu selected
@@ -186,16 +192,13 @@ if selection == "1":
 
 
 while True:
-    key_pressed = game.main_game_window.listen()
+    key_pressed = game.active_game_window.listen()
     if key_pressed == "1":
 
         # Main game window is drawn on instantiated on GameMem init
         # Then we listen for the returned key, this won't return until
         # a key match is pressed
         # game.main_game_window.show()
-        game.main_game_window.load_map(go.Levels.NH1)
-        key_pressed = game.main_game_window.listen()
+        game.active_game_window.load_map(go.Levels.NH1)
+        key_pressed = game.active_game_window.listen()
         logger.info("Listening for input on main window")
-
-        # In Main Game window
-

@@ -8,13 +8,15 @@ logger = logging.getLogger(__name__)
 
 
 class Game:
+    """Game Class, may be deprecated by using game mem obj,
+    I may split up gamemem object to further divide and silo objects"""
     def __init__(self):
         self.players_turn = True
         self.current_level = "Level Object"
 
 
-# Actors such as (Player, Enemy, Creature, vehicle)
 class Actor:
+    """Actors such as (Player, Enemy, Creature, vehicle)"""
     def __init__(self):
         self._position = None
 
@@ -35,6 +37,7 @@ class Actor:
 
 
 class Item:
+    """Item object parent class with basic attrs"""
     def __init__(self, name, description, value, weight):
         self.name = name
         self.description = description
@@ -44,6 +47,7 @@ class Item:
 
 
 class Attributes:
+    """Player attribute container"""
     def __init__(self):
         self.stats = {
             "aim": 0,
@@ -68,6 +72,8 @@ class Attributes:
         }
 
     def increase_stat(self, stat, amount):
+        """
+        stat type: str"""
         self.stats[stat] += amount
 
     def decrease_stat(self, stat, amount):
@@ -75,6 +81,7 @@ class Attributes:
 
 
 class Player(Actor):
+    """Player Actor class, will handle player actions and information"""
     def __init__(self):
         super(Actor).__init__()
 
@@ -102,6 +109,7 @@ class Player(Actor):
 
 
 class Inventory:
+    """Inventory class with methods for managing inventory Table"""
     def __init__(self):
         # Dict for storing inv data
         self._inv = []
@@ -136,9 +144,17 @@ class Inventory:
             self.inv_table.add_row(*row)
 
     def add_item(self, item: Item, qty: int):
+        """
+        Adds item to the players inventory
+
+        :param item: Item object to be added to inventory
+        :param qty: int for the amount of the item to add
+        :return: None
+        """
         # If there is an item in the database already
         for row in self._inv:
-            if item.name in row:  # TODO Test to see if items with similar names effects this 'gun' and 'gun barrel'
+            if item.name in row:  # TODO Test to see if items with similar names effects this
+                # 'gun' and 'gun barrel'
                 # Item in table already
                 old_qty = int(row[3])
                 old_qty += qty
@@ -146,16 +162,20 @@ class Inventory:
 
         #  If this is the first item in players inv
         if len(self._inv) == 0:
-            self._inv.append(["-->", item.name, item.description, str(qty), str(item.value), str(item.weight)])
+            self._inv.append(
+                ["-->", item.name, item.description, str(qty), str(item.value), str(item.weight)]
+            )
 
         else:
-            self._inv.append(["   ", item.name, item.description, str(qty), str(item.value), str(item.weight)])
+            self._inv.append(
+                ["   ", item.name, item.description, str(qty), str(item.value), str(item.weight)]
+            )
 
         self.refresh_inv_table()
 
     # TODO Implement item removal function
     def remove_item(self, item: Item, qty: int):
-        logger.info(f"x{qty} {item.name} removed from inventory.")
+        logger.info(f"x%qty %name removed from inventory.", qty, item.name)
 
     def move_selection(self, direction):
         """Handles moving the active item arrow in the Item table"""
@@ -189,16 +209,18 @@ class Inventory:
 
     def select_item(self):
         # Find active item index
-        indx = Utils.find_index(self._inv)
-
+        # indx = Utils.find_index(self._inv)
+        pass
         # self._inv[indx]
 
 
 class Enemy(Actor):
+    """Enemy actor, which will hold AI methods"""
     pass
 
 
 class GameMap:
+    """Object which holds specific maps as objects"""
     def __init__(self, name, intro_path, lvl_path):
         self.name = name
         self.lvl_view = ""  # Computed view/read from file
@@ -206,12 +228,13 @@ class GameMap:
         self.lvl_path = lvl_path
         self.intro_path = intro_path
 
-        with open(self.intro_path, "r", encoding="utf-8") as f:
-            self.intro_view = f.read()
+        with open(self.intro_path, "r", encoding="utf-8") as intro_file:
+            self.intro_view = intro_file.read()
 
-        with open(self.lvl_path, "r", encoding="utf-8") as f:
-            self.lvl_view = f.read()
+        with open(self.lvl_path, "r", encoding="utf-8") as lvl_file:
+            self.lvl_view = lvl_file.read()
 
 
 class Levels:
+    """This will hold all the loaded levels"""
     NH1 = GameMap("Neighborhood House", "./levels/NH/NH1_intro.txt", "./levels/NH/NH1_map.txt")
