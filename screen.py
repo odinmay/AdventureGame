@@ -69,10 +69,11 @@ class Screen:
         self.con.height = 45
         self.twidth = get_terminal_size()[0]
         self.theight = get_terminal_size()[1]
-        logger.info(f"{self.__class__} initialized")
+        logger.info("%class initialized", self.__class__)
 
     def show(self):
         Utils.transition()
+        logger.info("Drawing %classname", self.__class__)
         self.con.print(self.layout)
 
     def set_height(self, height):
@@ -88,10 +89,14 @@ class Screen:
 class MenuWindow(Screen):
     def __init__(self, opt1, opt2, opt3, opt4):
         super(MenuWindow, self).__init__()
-        self.opt1 = Panel(Align(text2art(f"1.  {opt1}", font=Settings.font), align="center", vertical="middle"))
-        self.opt2 = Panel(Align(text2art(f"2.  {opt2}", font=Settings.font), align="center", vertical="middle"))
-        self.opt3 = Panel(Align(text2art(f"3.  {opt3}", font=Settings.font), align="center", vertical="middle"))
-        self.opt4 = Panel(Align(text2art(f"4.  {opt4}", font=Settings.font), align="center", vertical="middle"))
+        self.opt1 = Panel(
+            Align(text2art(f"1.  {opt1}", font=Settings.font), align="center", vertical="middle"))
+        self.opt2 = Panel(
+            Align(text2art(f"2.  {opt2}", font=Settings.font), align="center", vertical="middle"))
+        self.opt3 = Panel(
+            Align(text2art(f"3.  {opt3}", font=Settings.font), align="center", vertical="middle"))
+        self.opt4 = Panel(
+            Align(text2art(f"4.  {opt4}", font=Settings.font), align="center", vertical="middle"))
 
         self.layout.split_row(
             Layout(Const.sidebar, ratio=1),
@@ -105,9 +110,9 @@ class MenuWindow(Screen):
             Layout(self.opt4)
         )
 
-        logger.debug(f"{self.__class__} initialized")
-
     def listen(self):
+        logger.info("%classname Listening for user input", self.__class__)
+
         # Listen for user input and if it matches a key, return it
         while True:
             # Resize window
@@ -118,6 +123,7 @@ class MenuWindow(Screen):
 
             usable_keys = ["esc", "1", "2", "3", "4"]
             if key in usable_keys:
+                logger.debug("User pressed %keyname", key)
                 return key
 
 
@@ -125,17 +131,18 @@ class MenuWindow(Screen):
 class PauseDisplay(MenuWindow):
     def __init__(self):
         super(PauseDisplay, self).__init__("Resume", "Options", "Stats", "Quit Game")
-        logger.debug(f"{self.__class__} initialized")
 
 
 class OptionsDisplay(MenuWindow):
     def __init__(self):
-        super(OptionsDisplay, self).__init__("Height", "Font", "Color", "Back")  # Pass in menu options any MenuWindow subclass
+        super(OptionsDisplay, self).__init__("Height", "Font", "Color",
+                                             "Back")  # Pass in menu options any MenuWindow subclass
 
 
 class HeightOptions(MenuWindow):
     def __init__(self):
-        super(HeightOptions, self).__init__("50", "55", "60", "65")  # Pass in menu options any MenuWindow subclass
+        super(HeightOptions, self).__init__("50", "55", "60",
+                                            "65")  # Pass in menu options any MenuWindow subclass
 
 
 class ItemOptions(MenuWindow):
@@ -165,14 +172,18 @@ class ActiveGameDisplay(Screen):
         )
         # Split the center into 2. GameMap on top and HUD on the bottom
         self.layout["Center"].split_column(
-            Layout(Panel(Align(ActiveGameDisplay.game_map, align="center", vertical="top"), title_align="center",
-                         title=f"4th St. Library", padding=2),
-                   name="MAP", ratio=2),
-            Layout(Panel(ActiveGameDisplay.hud, title=f"Buster Scruggs: Level 12", title_align="center"), name="HUD",
+            Layout(Panel(Align(
+                ActiveGameDisplay.game_map, align="center", vertical="top"),
+                title_align="center", title=f"4th St. Library", padding=2), name="MAP", ratio=2),
+            Layout(Panel(
+                Align(ActiveGameDisplay.hud, title=f"Buster Scruggs: Level 12", align="center"),
+                title_align="center"), name="HUD",
                    size=8)
         )
 
     def listen(self):
+        logger.info("%classname Listening for user input", self.__class__)
+
         # Listen for user input and if it matches a key, return it
         while True:
             # Resize window
@@ -183,6 +194,7 @@ class ActiveGameDisplay(Screen):
 
             usable_keys = ["esc", "1", "2", "3", "4", "i", "m", "c"]
             if key in usable_keys:
+                logger.debug("User pressed %keyname", key)
                 return key
 
     def load_map(self, gamemap: GameMap):
@@ -194,7 +206,7 @@ class ActiveGameDisplay(Screen):
         sleep(2)
         self.layout["MAP"].update(
             Panel(Align(gamemap.lvl_view, align="center", vertical="top"), title_align="center",
-                  title=f"{gamemap.name}",padding=2))
+                  title=f"{gamemap.name}", padding=2))
         self.show()
 
 
@@ -204,12 +216,14 @@ class InventoryDisplay(Screen):
 
         self.layout.split_row(
             Layout(Const.sidebar, ratio=1),
-            Layout(Panel(inv_table, title_align="center", title=f"Inventory", expand=True, padding=1),
-                   name="INV", ratio=2),
+            Layout(
+                Panel(inv_table, title_align="center", title=f"Inventory", expand=True, padding=1),
+                name="INV", ratio=2),
             Layout(Const.sidebar, ratio=1)
         )
 
     def redraw_inv(self, table):
+        logger.info("Redrawing inventory table", self.__class__)
         self.layout.split_row(
             Layout(Const.sidebar, ratio=1),
             Layout(Panel(table, title_align="center", title=f"Inventory", expand=True, padding=1),
@@ -219,6 +233,8 @@ class InventoryDisplay(Screen):
         self.show()
 
     def listen(self):
+        logger.info("%classname Listening for user input", self.__class__)
+
         # Listen for user input and if it matches a key, return it
         while True:
             # Resize window
@@ -229,6 +245,7 @@ class InventoryDisplay(Screen):
 
             usable_keys = ["esc", "1", "2", "3", "4", "i", "up", "down", "enter"]
             if key in usable_keys:
+                logger.debug("User pressed %keyname", key)
                 return key
 
 
@@ -240,15 +257,17 @@ class WorldMapDisplay(Screen):
 
         self.layout.split_row(
             Layout(
-                Panel(Align(f"[white]{text2art('World GameMap', font='big')}[/white]", align="center",
-                            vertical="middle")),
+                Panel(
+                    Align(f"[white]{text2art('World GameMap', font='big')}[/white]", align="center",
+                          vertical="middle")),
                 ratio=4),
-            Layout(Panel(Align(f"[white]{text2art('LOC', font='big')}[/white]", align="center")), ratio=1)
+            Layout(Panel(Align(f"[white]{text2art('LOC', font='big')}[/white]", align="center")),
+                   ratio=1)
         )
 
-        self.show()
-
     def listen(self):
+        logger.info("%classname Listening for user input", self.__class__)
+
         # Listen for user input and if it matches a key, return it
         while True:
             # Resize window
@@ -259,6 +278,7 @@ class WorldMapDisplay(Screen):
 
             usable_keys = ["esc", "m", "l"]
             if key in usable_keys:
+                logger.debug("User pressed %keyname", key)
                 return key
 
 
@@ -268,15 +288,18 @@ class LocalMapDisplay(Screen):
 
         self.layout.split_row(
             Layout(Panel(
-                Align(f"[white]{text2art('Local Area GameMap', font='big')}[/white]", align="center",
+                Align(f"[white]{text2art('Local Area GameMap', font='big')}[/white]",
+                      align="center",
                       vertical="middle")),
                 ratio=4),
-            Layout(Panel(Align(f"[white]{text2art('LOC', font='big')}[/white]", align="center")), ratio=1)
+            Layout(Panel(Align(f"[white]{text2art('LOC', font='big')}[/white]", align="center")),
+                   ratio=1)
         )
 
-        self.show()
-
     def listen(self):
+        logger.info("%classname Listening for user input", self.__class__)
+
+        # Listen for user input and if it matches a key, return it
         while True:
             # Resize window
             self.resize_if_needed()
@@ -286,6 +309,7 @@ class LocalMapDisplay(Screen):
 
             usable_keys = ["esc", "m", "l"]
             if key in usable_keys:
+                logger.debug("User pressed %keyname", key)
                 return key
 
 
@@ -299,9 +323,12 @@ class CharacterStatus(Screen):
         )
 
         self.layout["Top"].split_row(
-            Layout(Panel(Align(f"[white]{text2art('Loadout', font='big')}[/white]", align="center")), ratio=1,
-                   name="TopLeft"),
-            Layout(Panel(Align(f"[white]{text2art('Status', font='big')}[/white]", align="center")), ratio=1,
+            Layout(
+                Panel(Align(f"[white]{text2art('Loadout', font='big')}[/white]", align="center")),
+                ratio=1,
+                name="TopLeft"),
+            Layout(Panel(Align(f"[white]{text2art('Status', font='big')}[/white]", align="center")),
+                   ratio=1,
                    name="TopRight"),
         )
 
@@ -320,9 +347,10 @@ class CharacterStatus(Screen):
             Layout(Panel("Budds/Debuffs"), ratio=1)
         )
 
-        self.show()
-
     def listen(self):
+        logger.info("%classname Listening for user input", self.__class__)
+
+        # Listen for user input and if it matches a key, return it
         while True:
             # Resize window
             self.resize_if_needed()
@@ -332,6 +360,7 @@ class CharacterStatus(Screen):
 
             usable_keys = ["esc", "c"]
             if key in usable_keys:
+                logger.debug("User pressed %keyname", key)
                 return key
 
 
@@ -340,28 +369,20 @@ class SplashScreen(Screen):
         super(SplashScreen, self).__init__()
 
         self.layout.split_column(
-            Layout(Panel(Align(text2art("*=*      Wasted   Lands      *=*", font="big"), align="center")), ratio=1, name="Top"),
-            Layout(Panel(Align(text2art(f"Produced     by     Aldo\nCreated     by     Odin\nPublished     by     GWA", font='big'), align="center")), ratio=4, name="Bottom")
+            Layout(Panel(
+                Align(text2art("*=*      Wasted   Lands      *=*", font="big"), align="center")),
+                   ratio=1, name="Top"),
+            Layout(Panel(Align(text2art(
+                f"Produced     by     Aldo\nCreated     by     Odin\nPublished     by     GWA",
+                font='big'), align="center")), ratio=4, name="Bottom")
         )
-
 
     def show(self):
         Utils.transition()
+        logger.info("Drawing %classname", self.__class__)
         self.con.print(self.layout)
-        sleep(2)
+        sleep(3)
         return
-
-    def listen(self):
-        while True:
-            # Resize window
-            self.resize_if_needed()
-
-            # Wait for keyboard input
-            key = keyboard.read_key(suppress=True)
-
-            usable_keys = ["esc", "1", "2", "3", "4"]
-            if key in usable_keys:
-                return key
 
 
 class MainMenu(Screen):
@@ -375,7 +396,8 @@ class MainMenu(Screen):
         )
 
         self.layout["Middle"].split_column(
-            Layout(Panel(Align(text2art("Wasted    Lands", font="big"), align="center")), ratio=1, name="Top"),
+            Layout(Panel(Align(text2art("Wasted    Lands", font="big"), align="center")), ratio=1,
+                   name="Top"),
             Layout(Panel(""), ratio=4, name="Bottom")
         )
 
@@ -386,8 +408,10 @@ class MainMenu(Screen):
             Layout(Panel(Align(text2art("Quit Game", font="big"), align="center")))
         )
 
-
     def listen(self):
+        logger.info("%classname Listening for user input", self.__class__)
+
+        # Listen for user input and if it matches a key, return it
         while True:
             # Resize window
             self.resize_if_needed()
@@ -397,5 +421,5 @@ class MainMenu(Screen):
 
             usable_keys = ["esc", "1", "2", "3", "4"]
             if key in usable_keys:
+                logger.debug("User pressed %keyname", key)
                 return key
-
