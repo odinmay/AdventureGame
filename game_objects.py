@@ -2,6 +2,8 @@
 import logging
 from rich.table import Table
 from rich.box import ASCII
+from utils import Utils
+
 logger = logging.getLogger(__name__)
 
 
@@ -33,7 +35,7 @@ class Actor:
 
 
 class Item:
-    def __init__(self, name, description, weight, value):
+    def __init__(self, name, description, value, weight):
         self.name = name
         self.description = description
         self.weight = weight
@@ -99,54 +101,97 @@ class Player(Actor):
         pass
 
 
-
 class Inventory:
     def __init__(self):
         # Dict for storing inv data
-        self._inv = {}
-
+        self._inv = []
+        # Name Description qty val(total) weight(total)
         # Setup visual inv repr Table object
-        self.player_inv = Table(box=ASCII, expand=True)
-        self.player_inv.add_column("Quantity", justify="center")
-        self.player_inv.add_column("Name", justify="right")
-        self.player_inv.add_column("Description", justify="right")
-        self.player_inv.add_column("Weight", justify="right")
-        self.player_inv.add_column("Value", justify="right")
+        self.inv_table = Table(box=ASCII, expand=True)
+        self.inv_table.add_column("Active", justify="center")
+        self.inv_table.add_column("Name", justify="center")
+        self.inv_table.add_column("Description", justify="left")
+        self.inv_table.add_column("Qty", justify="center")
+        self.inv_table.add_column("Value", justify="right")
+        self.inv_table.add_column("Weight", justify="right")
 
     def get_inv_table(self) -> Table:
         # Refresh inv table them return it
         self.refresh_inv_table()
-        return self.player_inv
+        return self.inv_table
 
     def refresh_inv_table(self):
         # Recreate Table object (empty)
-        self.player_inv = Table(box=ASCII, expand=True)
-        self.player_inv.add_column("Quantity", justify="center")
-        self.player_inv.add_column("Name", justify="right")
-        self.player_inv.add_column("Description", justify="right")
-        self.player_inv.add_column("Weight", justify="right")
-        self.player_inv.add_column("Value", justify="right")
+        del self.inv_table
+        self.inv_table = Table(box=ASCII, expand=True)
+        self.inv_table.add_column("Active", justify="center")
+        self.inv_table.add_column("Name", justify="center")
+        self.inv_table.add_column("Description", justify="left")
+        self.inv_table.add_column("Qty", justify="center")
+        self.inv_table.add_column("Value", justify="right")
+        self.inv_table.add_column("Weight", justify="right")
 
-        # Rebuild the table using the _inv data
-        for item in self._inv.values():
-            row_str = ",".join(item)
-            self.player_inv.add_row(*row_str.split(','))
+        # Rebuild the table using the current self._inv data
+        for row in self._inv:
+            self.inv_table.add_row(*row)
 
-    def add_item(self, item: Item, qty: str):
+    def add_item(self, item: Item, qty: int):
         # If there is an item in the database already
-        if self._inv.get(item.name):
-            # TODO: Add error checking on this type cast. It will error eventually
-            new_qty = int(self._inv[item.name][0]) + int(qty)
-            self._inv[item.name][0] = str(new_qty)
+        for row in self._inv:
+            if item.name in row:  # TODO Test to see if items with similar names effects this 'gun' and 'gun barrel'
+                # Item in table already
+                old_qty = int(row[3])
+                old_qty += qty
+                return
+
+        #  If this is the first item in players inv
+        if len(self._inv) == 0:
+            self._inv.append(["-->", item.name, item.description, str(qty), str(item.value), str(item.weight)])
 
         else:
-            self._inv[item.name] = [qty, item.name, item.description, item.weight, item.value]
+            self._inv.append(["   ", item.name, item.description, str(qty), str(item.value), str(item.weight)])
 
         self.refresh_inv_table()
 
     # TODO Implement item removal function
     def remove_item(self, item: Item, qty: int):
         logger.info(f"x{qty} {item.name} removed from inventory.")
+
+    def move_selection(self, direction):
+        """Handles moving the active item arrow in the Item table"""
+
+        if direction == "up":
+            #  Find which index the active item is at
+            indx = Utils.find_index(self._inv)
+            #  If it's the first item, move to the bottom
+            if indx < 1:
+                self._inv[-1][0] = "-->"
+                self._inv[indx][0] = "   "
+            #  Else move up one row
+            else:
+                self._inv[indx][0] = "   "
+                self._inv[indx - 1][0] = "-->"
+
+        elif direction == "down":
+            #  Find which index the active item is at
+            indx = Utils.find_index(self._inv)
+            #  If it's the last item, move to the top
+            if len(self._inv) - 1 == indx:
+                self._inv[0][0] = "-->"
+                self._inv[-1][0] = "   "
+            #  Else move down one row
+            else:
+                self._inv[indx][0] = "   "
+                self._inv[indx + 1][0] = "-->"
+
+        # Redraw the table with the updated row data
+        self.refresh_inv_table()
+
+    def select_item(self):
+        # Find active item index
+        indx = Utils.find_index(self._inv)
+
+        # self._inv[indx]
 
 
 class Enemy(Actor):

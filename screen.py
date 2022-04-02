@@ -5,6 +5,8 @@ from rich.align import Align
 from rich.console import Console
 from rich.layout import Layout
 from art import text2art
+
+import game_objects
 from game_objects import GameMap
 from settings import Settings
 import keyboard
@@ -16,46 +18,49 @@ from time import sleep
 logger = logging.getLogger(__name__)
 
 test_art = (r'''
-
-#####################|                                
-####################/                                 
-###################|       ___________                
-##################/_______/```````````\______________ 
+#####################|
+####################/
+###################|       ___________
+##################/_______/```````````\______________
 #############___/`````````````````````````````"""""""|
 ############/  ``````````````````````""""""""""""""" |
-############|```````````````"""""""""""""""""""   __/ 
-###########_/\_____```````"""""""________________/    
-##########/       \____________/                      
-#######/                                              
-##/                                                   
-                                                      
-                                                      
-                                                      
-                                                      
-                                                      
-                                                      
-                                                      
-                                ##                    
-                               #####                  
-                               #### # #               
-                                 #####                
-                                #  ###                
-                                  ##  #               
-                                    ## #              
-                                      #               
-                                       #              
-                                      _||             
-                 ,                 ._/  /---+-\_      
-               #=\  #             /#_,/~~~     |\.    
-          ,___    \/ /#          /   /_ __ __ /#'|    
-            # \__#/ /___#       /      |   __   __\   
-              /  \\/# \*`      / [][ ] |  /  | |  ##  
-              ` /==|\          |       | T__ | \._/|  
-               #  /|*\        =L  _ _ _|__  \_     |  
-                  |*| `       /_______/|  `,__./==\|  
-                  |#|        ||=======||\___ __._ _|  
-________    _____/##|________||=======|| \  `  _`   \ 
- |/|=|=|=* #=|/|/###\|*|=|==|||=======|| |    | |    |''')
+############|```````````````"""""""""""""""""""   __/
+###########_/\_____```````"""""""________________/
+##########/       \____________/
+#######/
+##/
+
+                                   
+            ~
+   ~  ~   ~                   ~         ~
+ ~      ~                         ~
+
+__
+``\__       ~   ~               ##    
+`````|       ~                 #####  
+"___/           ~              #### # #
+                                 #####
+                                #  ###
+                                  ##  #
+                                    ## #
+                                      #
+                                       #
+                                      _||
+                 ,                 ._/  /---+-\_
+               #=\  #             /#_,/~~~     |\.
+          ,___    \/ /#          /   /_ __ __ /#'|
+            # \__#/ /___#       /      |   __   __\
+              /  \\/# \*`      / [][ ] |  /  | |  ##
+              ` /==|\          |       | T__ | \._/|
+               #  /|*\        =L  _ _ _|__  \_     |
+                  |*| `       /_______/|  `,__./==\|
+                  |#|        ||=======||\___ __._ _|
+________    _____/##|________||=======|| \  `  _`   \
+ |/|=|=|=* #=|/|/###\|*|=|==|||=======|| |    | |    |
+      .                           `                   
+   "        `       ,     "            `   "        ' 
+                                '                '    ''')
+
 
 class Screen:
     def __init__(self):
@@ -99,7 +104,7 @@ class MenuWindow(Screen):
             Layout(self.opt3),
             Layout(self.opt4)
         )
-        self.show()
+
         logger.debug(f"{self.__class__} initialized")
 
     def listen(self):
@@ -125,12 +130,17 @@ class PauseDisplay(MenuWindow):
 
 class OptionsDisplay(MenuWindow):
     def __init__(self):
-        super(OptionsDisplay, self).__init__("Height", "Font", "Color", "Back")
+        super(OptionsDisplay, self).__init__("Height", "Font", "Color", "Back")  # Pass in menu options any MenuWindow subclass
 
 
 class HeightOptions(MenuWindow):
     def __init__(self):
-        super(HeightOptions, self).__init__("35", "40", "45", "50")
+        super(HeightOptions, self).__init__("50", "55", "60", "65")  # Pass in menu options any MenuWindow subclass
+
+
+class ItemOptions(MenuWindow):
+    def __init__(self):
+        super(ItemOptions, self).__init__("Use Item", "Drop Item", "Item Info", "Back")
 
 
 class ActiveGameDisplay(Screen):
@@ -184,8 +194,8 @@ class ActiveGameDisplay(Screen):
         sleep(2)
         self.layout["MAP"].update(
             Panel(Align(gamemap.lvl_view, align="center", vertical="top"), title_align="center",
-                  title=f"{gamemap.name}",
-                  padding=2))
+                  title=f"{gamemap.name}",padding=2))
+        self.show()
 
 
 class InventoryDisplay(Screen):
@@ -199,6 +209,13 @@ class InventoryDisplay(Screen):
             Layout(Const.sidebar, ratio=1)
         )
 
+    def redraw_inv(self, table):
+        self.layout.split_row(
+            Layout(Const.sidebar, ratio=1),
+            Layout(Panel(table, title_align="center", title=f"Inventory", expand=True, padding=1),
+                   name="INV", ratio=2),
+            Layout(Const.sidebar, ratio=1)
+        )
         self.show()
 
     def listen(self):
@@ -210,7 +227,7 @@ class InventoryDisplay(Screen):
             # Wait for keyboard input
             key = keyboard.read_key(suppress=True)
 
-            usable_keys = ["esc", "1", "2", "3", "4", "i"]
+            usable_keys = ["esc", "1", "2", "3", "4", "i", "up", "down", "enter"]
             if key in usable_keys:
                 return key
 
@@ -327,7 +344,6 @@ class SplashScreen(Screen):
             Layout(Panel(Align(text2art(f"Produced     by     Aldo\nCreated     by     Odin\nPublished     by     GWA", font='big'), align="center")), ratio=4, name="Bottom")
         )
 
-        self.show()
 
     def show(self):
         Utils.transition()
@@ -370,7 +386,6 @@ class MainMenu(Screen):
             Layout(Panel(Align(text2art("Quit Game", font="big"), align="center")))
         )
 
-        self.show()
 
     def listen(self):
         while True:

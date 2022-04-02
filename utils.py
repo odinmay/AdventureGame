@@ -31,6 +31,15 @@ class Utils:
         for i in range(100):
             keyboard.send("backspace")
 
+    # def find_index(self, ):
+    @staticmethod
+    def find_index(item_row):
+        counter = 0
+        for row in item_row:
+            if "-->" in row:
+                return counter
+            counter += 1
+        return counter
 
 class Const:
     sidebar = Panel("")
