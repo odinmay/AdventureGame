@@ -38,11 +38,12 @@ class Actor:
 
 class Item:
     """Item object parent class with basic attrs"""
-    def __init__(self, name, description, value, weight):
+    def __init__(self, name, description, value, weight, info_panel):
         self.name = name
         self.description = description
         self.weight = weight
         self.value = value
+        self.info_panel = info_panel
         # self.is_equipped = False use in a subclass object
 
 
@@ -134,10 +135,10 @@ class Inventory:
         self.inv_table.add_column("Value", justify="right")
         self.inv_table.add_column("Weight", justify="right")
 
-    def get_inv_table(self) -> Table:
+    def get_inv_table(self):  # TODO Add type hint for tuple
         # Refresh inv table them return it
         self.refresh_inv_table()
-        return self.inv_table
+        return (self.inv_table, self._inv)
 
     def refresh_inv_table(self):
         # Recreate Table object (empty)
@@ -152,7 +153,7 @@ class Inventory:
 
         # Rebuild the table using the current self._inv data
         for row in self._inv:
-            self.inv_table.add_row(*row)
+            self.inv_table.add_row(*row[:-1])
 
     def add_item(self, item: Item, qty: int):
         """
@@ -174,12 +175,12 @@ class Inventory:
         #  If this is the first item in players inv
         if len(self._inv) == 0:
             self._inv.append(
-                ["-->", item.name, item.description, str(qty), str(item.value), str(item.weight)]
+                ["-->", item.name, item.description, str(qty), str(item.value), str(item.weight), item.info_panel]
             )
 
         else:
             self._inv.append(
-                ["   ", item.name, item.description, str(qty), str(item.value), str(item.weight)]
+                ["   ", item.name, item.description, str(qty), str(item.value), str(item.weight), item.info_panel]
             )
 
         self.refresh_inv_table()

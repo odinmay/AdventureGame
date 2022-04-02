@@ -208,22 +208,30 @@ class ActiveGameDisplay(Screen):
 
 
 class InventoryDisplay(Screen):
-    def __init__(self, inv_table: Table):
+    def __init__(self, table_data):  #  TODO Type hint tuple
         super(InventoryDisplay, self).__init__()
+        for item_row in table_data[1]:
+            if "-->" in item_row:
+                item_panel = Panel(item_row[-1], padding=1)
 
         self.layout.split_row(
-            Layout(Const.sidebar, ratio=1),
+            Layout(item_panel, ratio=1),
             Layout(
-                Panel(inv_table, title_align="center", title=f"Inventory", expand=True, padding=1),
+                Panel(table_data[0], title_align="center", title=f"Inventory", expand=True, padding=1),
                 name="INV", ratio=2),
             Layout(Const.sidebar, ratio=1)
         )
 
-    def redraw_inv(self, table: Table):
+    def redraw_inv(self, table_data):
+        for item_row in table_data[1]:
+            if "-->" in item_row:
+                item_panel = Panel(item_row[-1], padding=1)
+
+
         logger.info("Redrawing inventory table")
         self.layout.split_row(
-            Layout(Const.sidebar, ratio=1),
-            Layout(Panel(table, title_align="center", title=f"Inventory", expand=True, padding=1),
+            Layout(item_panel, ratio=1),
+            Layout(Panel(table_data[0], title_align="center", title=f"Inventory", expand=True, padding=1),
                    name="INV", ratio=2),
             Layout(Const.sidebar, ratio=1)
         )
