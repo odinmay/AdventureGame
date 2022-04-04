@@ -9,10 +9,10 @@ from rich.table import Table
 from rich.console import Console
 from rich.layout import Layout
 from art import text2art
-from game_objects import GameMap
 from settings import Settings
 import keyboard
 from utils import Utils, Const
+import game_objects
 
 # Set up the logger
 logger = logging.getLogger(__name__)
@@ -194,16 +194,16 @@ class ActiveGameDisplay(Screen):
                 logger.debug(f"User pressed {key}")
                 return key
 
-    def load_map(self, gamemap: GameMap):
+    def load_map(self, gamemap: game_objects.GameMap):
         """Loads map intro file, sleeps, then loads the actual map file"""
         self.layout["MAP"].update(
-            Panel(Align(gamemap.intro_view, align="center", vertical="top"), title_align="center",
+            Panel(Align(gamemap.intro_view, align="center", vertical="middle"), title_align="center",
                   title=f"{gamemap.name}",
                   padding=2))
         self.show()
-        sleep(2)
+        sleep(5)
         self.layout["MAP"].update(
-            Panel(Align(gamemap.lvl_view, align="center", vertical="top"), title_align="center",
+            Panel(Align(gamemap.lvl_view, align="center", vertical="middle"), title_align="center",
                   title=f"{gamemap.name}", padding=2))
         self.show()
 

@@ -4,8 +4,24 @@ Where the tiles are made
 import json
 import os
 from pprint import pprint
-import game_objects as go
+import tile
 from utils import Utils
+
+
+def get_tile(tile_name: str):
+    """Gets object from a dict of objects"""
+    if tile_name == " ":
+        return tile.Tile
+    tiles = {
+        "#": tile.Wall,
+        "D": tile.Door,
+        "W": tile.Window,
+        "T": tile.Tree,
+        "C": tile.Car,
+        "B": tile.Workbench,
+    }
+
+    return tiles[tile_name]()
 
 
 class MapFactory:
@@ -24,49 +40,39 @@ class MapFactory:
                 line = line[1:-2]
                 # Split it into a list and add it to map_rows
                 map_rows.append(list(line))
+                print(list(line))
 
         self._update_tile_list(map_info_path)
+        # print(map_rows)
+        return self._build_map(map_rows)
 
-        return self._build_map(map_rows, map_info_path)
-
-    def _build_map(self, map_row: list, map_info_path: str):
+    def _build_map(self, map_row: list):
         """Builds the object row list and str list for display and returns both"""
         obj_list = []
         for line in map_row:
             obj_row = []
-            for tile in line:
-                match tile:
-                    case "door":
-                        obj_row.append(go.Door())
-                    case "pool":
-                        obj_row.append(go.Pool())
-                    case "window":
-                        obj_row.append(go.Window())
-                    case "wall":
-                        obj_row.append(go.Wall("wood"))
-                    case "car":
-                        obj_row.append(go.Car())
-                    case " ":
-                        obj_row.append(go.Tile())
+            for tile_name in line:
+                obj_row.append(get_tile(tile_name))
+            obj_list.append(obj_row)
+
+        return obj_list
 
     @staticmethod
-    def _update_tile_list(self, map_info_path):
+    def _update_tile_list(map_info_path):
         """Update the tile_list.txt master list with map_tiles keys"""
 
         # Open map_info file to gather map_tiles list
         map_info = Utils.read_map_metadata(map_info_path)
 
         # For ea. tile in 'map_tiles' keys, if its not in item_list.txt add it.
-        for tile in map_info["map_tiles"].values():
+        for tile_name in map_info["map_tiles"].values():
             # Open tile_list.txt and read it
             f = open('tile_list.txt', "r+", encoding="utf-8")
             file_data = f.read()
             # Append to file if not already in it
-            if tile not in file_data:
-                f.write(f"{tile}\n")
+            if tile_name not in file_data:
+                f.write(f"{tile_name}\n")
             # Close file for cleanup
             f.close()
 
 
-factory = MapFactory()
-factory.process_map_file("./levels/ExampleMap/example_map.txt", "./levels/ExampleMap/example_info.json")

@@ -4,6 +4,7 @@ from typing import Tuple
 from rich.table import Table
 from rich.box import ASCII
 from utils import Utils
+import map_factory as mf
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +14,7 @@ class Game:
     I may split up gamemem object to further divide and silo objects"""
     def __init__(self):
         self.players_turn = True
-        self.current_level = "Level Object"
+        self.level_grid = None
 
 
 class Actor:
@@ -98,7 +99,8 @@ class Player(Actor):
     def __init__(self):
         super(Actor).__init__()
 
-        self.name = "PLACEHOLDER"
+        self.inv = Inventory()
+        self.name = "Jack Bower"
         self.level = 1
         self.attributes = Attributes()
         self.health = 100
@@ -242,20 +244,34 @@ class Enemy(Actor):
 
 class GameMap:
     """Object which holds specific maps as objects"""
-    def __init__(self, name, intro_path, lvl_path):
-        self.name = name
+    def __init__(self, map_path, info_path, intro_path):
+        self.name = "Default Name"
         self.lvl_view = ""  # Computed view/read from file
         self.intro_view = ""
-        self.lvl_path = lvl_path
+        self.map_path = map_path
+        self.info_path = info_path
         self.intro_path = intro_path
 
         with open(self.intro_path, "r", encoding="utf-8") as intro_file:
             self.intro_view = intro_file.read()
 
-        with open(self.lvl_path, "r", encoding="utf-8") as lvl_file:
+        with open(self.map_path, "r", encoding="utf-8") as lvl_file:
             self.lvl_view = lvl_file.read()
 
+        map_factory = mf.MapFactory()
+        self.level_obj_grid = map_factory.process_map_file(
+            self.map_path,
+            self.info_path
+        )
+        print(self.level_obj_grid)
 
-class Levels:
-    """This will hold all the loaded levels"""
-    NH1 = GameMap("Neighborhood House", "./levels/NH/NH1_intro.txt", "./levels/NH/NH1_map.txt")
+    def get_map_str(self):
+        for x in self.level_obj_grid:
+            print(x)
+
+
+# class Levels:
+#     """This will hold all the loaded levels"""
+#     NH1 = GameMap("Neighborhood House", "./levels/NH/NH1_intro.txt", "./levels/NH/NH1_map.txt")
+
+

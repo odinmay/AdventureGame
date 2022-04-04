@@ -1,0 +1,13 @@
+{
+  "name" : "Neighborhood House 2",
+  "map_tiles": {
+    "D": "door",
+    "C": "cabinet",
+    "W": "window",
+    "#": "wall",
+    "T": "tree",
+    "B": "workbench"
+  },
+  "spawn_point": "1,3",
+  "threat_level": "2"
+}

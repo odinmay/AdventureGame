@@ -5,6 +5,7 @@ import screen
 from settings import Settings
 from utils import Utils
 import game_objects as go
+from time import sleep
 
 # Setting up root logger
 logger = logging.getLogger(__name__)
@@ -18,14 +19,22 @@ logging.basicConfig(
 logger.info("Root logger initialized")
 
 
-# Class for holding obj states in memory
+# Class for holding game object states in memory
 class GameMem:
     """Game class which holds all active game objects"""
+
     def __init__(self):
         logger.debug("%class initialized.", self.__class__)
         logger.info("GameMem object has been created. Used for storing screens and other "
                     "gamestate objects in memory")
 
+        self.player = go.Player()
+        self.current_level = go.GameMap(
+            "./levels/GasStation/gas_station_map.txt",
+            "./levels/GasStation/gas_station_info.json",
+            "./levels/GasStation/gas_station_intro.txt")
+
+        #  TODO Instatiate all screen on boot, potentially multithread while splash screen shows
         ################# Screens ##########################
         self.active_game_window = screen.ActiveGameDisplay()
         self.pause_menu_window = None
@@ -39,7 +48,6 @@ class GameMem:
         self.height_options = None
         self.item_popup_screen = None
         ####################################################
-        self.player_inv = go.Inventory()
 
 
 # Get OS info and set clear/cls command
@@ -54,8 +62,8 @@ elif os.name == "nt":
 os.system(Settings.clear_cmd)
 
 # Initialize the main storage class
-game = GameMem()
 
+game = GameMem()
 
 weed_pen_details = Utils.load_art("weed_pen")
 
@@ -65,20 +73,19 @@ shotgun_details = Utils.load_art("shotgun")
 
 shungite_detais = Utils.load_art("shungite")
 
-ten_dollars = go.Item("10 Dollar Bill", "Cold Hard Cash", 10, 0.1, ten_dollars_details)  #  Add another arg with item art
-game.player_inv.add_item(ten_dollars, 1)
+ten_dollars = go.Item("10 Dollar Bill", "Cold Hard Cash", 10, 0.1,
+                   ten_dollars_details)  # Add another arg with item art
+game.player.inv.add_item(ten_dollars, 1)
 
 weed_pen = go.Item("Weed Pen", "hittin' the pen!", 50, 0.2, weed_pen_details)
-game.player_inv.add_item(weed_pen, 1)
-game.player_inv.add_item(weed_pen, 12)
+game.player.inv.add_item(weed_pen, 1)
+game.player.inv.add_item(weed_pen, 12)
 
 shungite = go.Item("Shungite", "I think he's jail or something..", 1000, 2, shungite_detais)
-game.player_inv.add_item(shungite, 10)
+game.player.inv.add_item(shungite, 10)
 
 shotgun = go.Item("12GA Shotgun", "The classic pump.", 300, 9, shotgun_details)
-game.player_inv.add_item(shotgun, 1)
-
-
+game.player.inv.add_item(shotgun, 1)
 
 # Show the splash Screen - its .show has 3 sec wait built in
 game.splash_screen.show()
@@ -91,7 +98,7 @@ selection = game.main_menu.listen()  # Stay here and listen until a valid key pr
 # If New game selected, show main window and jump into MAIN GAME LOOP
 if selection == "1":
     game.active_game_window.show()
-
+    game.active_game_window.load_map(game.current_level)
     # START LOOP
     while True:
         # Begin listening on active game window
@@ -140,26 +147,25 @@ if selection == "1":
 
             # In MainGame Window, Clicked I for inventory
         elif key_pressed == "i":
-            game.inv_window = screen.InventoryDisplay(game.player_inv.get_inv_table())
+            game.inv_window = screen.InventoryDisplay(game.player.inv.get_inv_table())
             game.inv_window.show()
             while True:
                 key_pressed = game.inv_window.listen()
 
                 if key_pressed == "esc":
-
                     game.active_game_window.show()  # TODO Make this quit script
                     break
                 #  Player presses up arrow in inventory
                 if key_pressed == "up":
-                    game.player_inv.move_selection("up")
-                    game.inv_window.redraw_inv(game.player_inv.get_inv_table())
+                    game.player.inv.move_selection("up")
+                    game.inv_window.redraw_inv(game.player.inv.get_inv_table())
                 #  Player presses down arrow in inventory
                 if key_pressed == "down":
-                    game.player_inv.move_selection("down")
-                    game.inv_window.redraw_inv(game.player_inv.get_inv_table())
+                    game.player.inv.move_selection("down")
+                    game.inv_window.redraw_inv(game.player.inv.get_inv_table())
                 #  Player selects an item
                 if key_pressed == "enter":
-                    game.player_inv.select_item()
+                    game.player.inv.select_item()
                     game.item_popup_screen = screen.ItemOptions()
                     game.item_popup_screen.show()
                     key_pressed = game.item_popup_screen.listen
@@ -190,22 +196,13 @@ if selection == "1":
         else:
             continue
 
-
-
-
-
-
-
-
-
-while True:
-    key_pressed = game.active_game_window.listen()
-    if key_pressed == "1":
-
-        # Main game window is drawn on instantiated on GameMem init
-        # Then we listen for the returned key, this won't return until
-        # a key match is pressed
-        # game.main_game_window.show()
-        game.active_game_window.load_map(go.Levels.NH1)
-        key_pressed = game.active_game_window.listen()
-        logger.info("Listening for input on main window")
+# while True:
+#     key_pressed = game.active_game_window.listen()
+#     if key_pressed == "1":
+#         # Main game window is drawn on instantiated on GameMem init
+#         # Then we listen for the returned key, this won't return until
+#         # a key match is pressed
+#         # game.main_game_window.show()
+#         game.active_game_window.load_map(go.Levels.NH1)
+#         key_pressed = game.active_game_window.listen()
+#         logger.info("Listening for input on main window")
