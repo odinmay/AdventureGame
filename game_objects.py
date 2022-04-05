@@ -4,7 +4,7 @@ from typing import Tuple
 from rich.table import Table
 from rich.box import ASCII
 from utils import Utils
-import map_factory as mf
+import level as mf
 
 logger = logging.getLogger(__name__)
 
@@ -258,12 +258,11 @@ class GameMap:
         with open(self.map_path, "r", encoding="utf-8") as lvl_file:
             self.lvl_view = lvl_file.read()
 
-        map_factory = mf.MapFactory()
-        self.level_obj_grid = map_factory.process_map_file(
+        map_factory = mf.Loader()
+        self.level_obj_grid = map_factory.get_map_strings(
             self.map_path,
             self.info_path
         )
-        print(self.level_obj_grid)
 
     def get_map_str(self):
         for x in self.level_obj_grid:

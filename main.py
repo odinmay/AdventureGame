@@ -1,10 +1,13 @@
 """Runs main game loop and entire game. Main entry point"""
 import logging
 import os
+from pprint import pprint
+import level
 import screen
 from settings import Settings
 from utils import Utils
 import game_objects as go
+import level as lvl
 from time import sleep
 
 # Setting up root logger
@@ -18,21 +21,22 @@ logging.basicConfig(
 
 logger.info("Root logger initialized")
 
+lvl_loader = level.Loader()
+
+gas_station_lvl = lvl_loader.create_level("gas_station")
+parking_lot_lvl = lvl_loader.create_level("parking_lot")
 
 # Class for holding game object states in memory
 class GameMem:
     """Game class which holds all active game objects"""
 
     def __init__(self):
-        logger.debug("%class initialized.", self.__class__)
+        logger.debug(f"{self.__class__} initialized.")
         logger.info("GameMem object has been created. Used for storing screens and other "
                     "gamestate objects in memory")
 
         self.player = go.Player()
-        self.current_level = go.GameMap(
-            "./levels/GasStation/gas_station_map.txt",
-            "./levels/GasStation/gas_station_info.json",
-            "./levels/GasStation/gas_station_intro.txt")
+
 
         #  TODO Instatiate all screen on boot, potentially multithread while splash screen shows
         ################# Screens ##########################
@@ -98,7 +102,9 @@ selection = game.main_menu.listen()  # Stay here and listen until a valid key pr
 # If New game selected, show main window and jump into MAIN GAME LOOP
 if selection == "1":
     game.active_game_window.show()
-    game.active_game_window.load_map(game.current_level)
+    game.active_game_window.load_map(gas_station_lvl)
+    sleep(5)
+    game.active_game_window.load_map(parking_lot_lvl)
     # START LOOP
     while True:
         # Begin listening on active game window

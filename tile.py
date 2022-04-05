@@ -14,11 +14,15 @@ class Tile:
         self.view = " "
         self._position = None
         self.bullet_passthrough = True
+        self.bullet_passthrough = True
         self.player_passthrough = True
         self.can_cover = False
         # Slippery?
 
     def __str__(self):
+        return self.view
+
+    def __repr__(self):
         return self.view
 
     @property
@@ -79,8 +83,6 @@ class Wall(SolidTile):
 
     # def __repr__(self):
     # return " ".join(self.__dict__.values())
-    def __str__(self):
-        return self.view
 
 
 class Door(SolidTile):
@@ -125,6 +127,7 @@ class Tree(SolidTile):
 class Workbench(StorageObjectTile):
     def __init__(self):
         super(Workbench, self).__init__()
+        self.view = "B"
 
         self.name = "Workbench"
         self.loot_table = [(

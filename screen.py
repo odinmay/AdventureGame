@@ -194,17 +194,17 @@ class ActiveGameDisplay(Screen):
                 logger.debug(f"User pressed {key}")
                 return key
 
-    def load_map(self, gamemap: game_objects.GameMap):
+    def load_map(self, level):
         """Loads map intro file, sleeps, then loads the actual map file"""
         self.layout["MAP"].update(
-            Panel(Align(gamemap.intro_view, align="center", vertical="middle"), title_align="center",
-                  title=f"{gamemap.name}",
+            Panel(Align(level.intro_view, align="center", vertical="middle"), title_align="center",
+                  title=f"{level.name}",
                   padding=2))
         self.show()
         sleep(5)
         self.layout["MAP"].update(
-            Panel(Align(gamemap.lvl_view, align="center", vertical="middle"), title_align="center",
-                  title=f"{gamemap.name}", padding=2))
+            Panel(Align(level.level_view, align="center", vertical="middle"), title_align="center",
+                  title=f"{level.name}", padding=2))
         self.show()
 
 
