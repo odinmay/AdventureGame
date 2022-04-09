@@ -6,8 +6,15 @@
     "W": "window",
     "#": "wall",
     "T": "tree",
-    "B": "workbench",
-    " ": " "
+    "B": "workbench"
+  },
+  "legend": {
+    "B2:W14": "Garage",
+    "i3:j4": "Tree",
+    "G16:K18": "Car",
+    "P24:U22": "Car",
+    "B": "Workbench",
+    "D": "Door"
   },
   "spawn_point": "1,3",
   "threat_level": "2"

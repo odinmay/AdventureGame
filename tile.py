@@ -17,6 +17,7 @@ class Tile:
         self.bullet_passthrough = True
         self.player_passthrough = True
         self.can_cover = False
+        self.player = None
         # Slippery?
 
     def __str__(self):

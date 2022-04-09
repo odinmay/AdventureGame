@@ -23,8 +23,9 @@ logger.info("Root logger initialized")
 
 lvl_loader = level.Loader()
 
-gas_station_lvl = lvl_loader.create_level("gas_station")
+# gas_station_lvl = lvl_loader.create_level("gas_station")
 parking_lot_lvl = lvl_loader.create_level("parking_lot")
+
 
 # Class for holding game object states in memory
 class GameMem:
@@ -36,7 +37,6 @@ class GameMem:
                     "gamestate objects in memory")
 
         self.player = go.Player()
-
 
         #  TODO Instatiate all screen on boot, potentially multithread while splash screen shows
         ################# Screens ##########################
@@ -52,7 +52,6 @@ class GameMem:
         self.height_options = None
         self.item_popup_screen = None
         ####################################################
-
 
 # Get OS info and set clear/cls command
 if os.name == "posix":
@@ -101,9 +100,6 @@ selection = game.main_menu.listen()  # Stay here and listen until a valid key pr
 
 # If New game selected, show main window and jump into MAIN GAME LOOP
 if selection == "1":
-    game.active_game_window.show()
-    game.active_game_window.load_map(gas_station_lvl)
-    sleep(5)
     game.active_game_window.load_map(parking_lot_lvl)
     # START LOOP
     while True:
@@ -133,7 +129,6 @@ if selection == "1":
                     game.height_options.show()
                     results = game.height_options.listen()
 
-                    # TODO Fix console height scaling after user select if possible
                     if key_pressed == "1":
                         Settings.console_height = 50
                         game.active_game_window.show()

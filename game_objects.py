@@ -123,6 +123,8 @@ class Player(Actor):
         pass
 
 
+
+
 class Inventory:
     """Inventory class with methods for managing inventory Table"""
     def __init__(self):
@@ -184,7 +186,7 @@ class Inventory:
             self._inv.append(
                 ["   ", item.name, item.description, str(qty), str(item.value), str(item.weight), item.info_panel]
             )
-        logger.info(f"x%qty %name added to inventory.", qty, item.name)
+        logger.info(f"x{qty} {item.name} added to inventory.")
         self.refresh_inv_table()
 
     def remove_item(self, item: Item, qty: int):
@@ -198,7 +200,7 @@ class Inventory:
                 else:
                     new_qty = int(item_row[3]) - qty
                     item_row[3] = new_qty
-        logger.info(f"x%qty %name removed from inventory.", qty, item.name)
+        logger.info(f"x{qty} {item.name} removed from inventory.")
 
     def move_selection(self, direction: str) -> None:
         """Handles moving the active item arrow in the Item table"""

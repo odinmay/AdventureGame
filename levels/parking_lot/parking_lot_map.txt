@@ -1,0 +1,26 @@
+   A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l
+  |v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v_v
+01|            C C C C C                           C C C C C                  |
+02|            C C C C C                           C C C C C                  |
+03|            C C C C C                           C C C C C                  |
+04|                                                                           |
+05|                                                                           |
+06|            C C C C C                           C C C C C                  |
+07|            C C C C C                           C C C C C                  |
+08|            C C C C C                           C C C C C                  |
+09|                                                                           |
+10|                                                                           |
+11|            C C C C C                           C C C C C                  |
+12|            C C C C C                           C C C C C                  |
+13|            C C C C C                           C C C C C                  |
+14|                                                                           |
+15|                                                                           |
+16|            C C C C C                                                      |
+17|            C C C C C                                                      |
+18|            C C C C C               C                                      |
+19|                                  C C C                                    |
+20|                                C C C C C                                  |
+21|                              C C C C C                                    |
+22|                              C C C C                                      |
+  |^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^_^|
+   A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l

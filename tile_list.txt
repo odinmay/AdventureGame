@@ -1,0 +1,8 @@
+door
+pool
+window
+wall
+car
+tree
+workbench
+ 

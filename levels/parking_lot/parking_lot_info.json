@@ -1,0 +1,17 @@
+{
+  "name" : "Parking Lot",
+  "map_tiles": {
+    "D": "door",
+    "C": "car",
+    "W": "window",
+    "#": "wall",
+    "T": "tree",
+    "B": "workbench",
+    " ": " "
+  },
+    "legend": {
+    "G1:K3": "Car"
+  },
+  "spawn_point": "3,21",
+  "threat_level": "2"
+}

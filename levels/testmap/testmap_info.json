@@ -1,0 +1,13 @@
+{
+  "name" : "testmap",
+  "map_tiles": {
+    "D": "door",
+    "W": "window",
+    "#": "wall"
+  },
+    "legend": {
+    "G1:K3": "Car"
+  },
+  "spawn_point": "3,21",
+  "threat_level": "2"
+}
